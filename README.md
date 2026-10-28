@@ -19,18 +19,20 @@ Airport_Airline_term_project_ERP/
 ├── README.md
 ├── Documents/
 │   ├── Iteration1/
-│   ├── Iteration2/                     # Same layout as Iteration1, no inception document
-│   └── Iteration3/                     # Same layout as Iteration1, no inception document
-├── src/                                # Java source (one package per department, planned)
-│   ├── erp/
-│   │   ├── Main.java                   # Main menu / entry point
-│   │   ├── terminal_ui/                # Shared terminal screen helpers
-│   │   ├── flight/                     # Flight Management
-│   │   ├── tickets/                    # Ticket Sales
-│   │   ├── hr/                         # Human Resources
-│   │   ├── aircraft/                   # Aircraft Management
-│   │   └── operations/                 # Airport Operations
-│   └── data/                           # Flat-file storage (no DBMS)
+│   │   ├── inception_document/
+│   │   ├── use_cases/
+│   │   └── domain_model/
+│   ├── Iteration2/                     # Empty for now; will mirror Iteration1, no inception document
+│   └── Iteration3/                     # Empty for now; will mirror Iteration1, no inception document
+└── src/
+    ├── erp/                            # Java source, one file per department 
+    │   ├── terminal_ui.java            # Shared terminal screen helpers
+    │   ├── flight_mngt.java            # Flight Management
+    │   ├── ticket_sales.java           # Ticket Sales
+    │   ├── hr.java                     # Human Resources
+    │   ├── aircraft_mngt.java          # Aircraft Management
+    │   └── airport_ops.java            # Airport Operations
+    └── data/                           # Flat-file storage (no DBMS)
 ```
 
 
