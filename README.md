@@ -26,6 +26,7 @@ Airport_Airline_term_project_ERP/
 │   └── Iteration3/                     # Empty for now; will mirror Iteration1, no inception document
 └── src/
     ├── erp/                            # Java source, one file per department 
+        ├── main.java                   # Entry point
     │   ├── terminal_ui.java            # Shared terminal screen helpers
     │   ├── flight_mngt.java            # Flight Management
     │   ├── ticket_sales.java           # Ticket Sales
