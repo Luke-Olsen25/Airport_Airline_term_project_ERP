@@ -7,7 +7,7 @@ A terminal-based Enterprise Resource Planning (ERP) system for a combined airpor
 | Department          | Iteration 1 (CURRENT) | Iteration 2 (Subject to Change) | Iteration 3 (Subject to Change) |
 |---------------------|----------------------|-------------|-------------|
 | Flight Management   | Schedule Flight      | Update Flight         | Cancel Flight         |
-| Ticket Sales        | Book Ticket          | Cancel Booking         | Process Refund         |
+| Ticket Sales        | Purchase Ticket          | Cancel Booking         | Process Refund         |
 | Human Resources     | Hire Employee        | Assign Employee to Flight         | Process Payroll         |
 | Aircraft Management | Register Aircraft    | Schedule Maintenance         | Record Maintenance         |
 | Airport Operations  | Assign Gate          | Update Gate Assignment         | Track Gate Availability         |
