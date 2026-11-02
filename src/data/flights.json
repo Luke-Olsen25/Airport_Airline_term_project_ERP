@@ -1,0 +1,7 @@
+[
+  {"flightNumber": "PA101", "origin": "DSM", "destination": "ORD", "date": "2026-11-20", "departureTime": "07:15", "arrivalTime": "08:40", "tailNumber": "N12347"},
+  {"flightNumber": "PA103", "origin": "DSM", "destination": "ORD", "date": "2026-11-20", "departureTime": "16:05", "arrivalTime": "17:30", "tailNumber": "N8765"},
+  {"flightNumber": "PA210", "origin": "DSM", "destination": "DEN", "date": "2026-11-20", "departureTime": "09:30", "arrivalTime": "10:55", "tailNumber": "N12347"},
+  {"flightNumber": "PA315", "origin": "ORD", "destination": "ATL", "date": "2026-11-21", "departureTime": "11:00", "arrivalTime": "14:05", "tailNumber": "N8765"},
+  {"flightNumber": "PA420", "origin": "DSM", "destination": "DFW", "date": "2026-11-22", "departureTime": "06:45", "arrivalTime": "09:10", "tailNumber": "N12347"}
+]

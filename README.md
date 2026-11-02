@@ -28,6 +28,8 @@ Airport_Airline_term_project_ERP/
     ├── erp/                            # Java source, one file per department 
     |   ├── main.java                   # Entry point
     │   ├── terminal_ui.java            # Shared terminal screen helpers
+    │   ├── AircraftManagement/         # Aircraft Management package
+    │   ├── TicketSales/                # Ticket Sales package (Purchase Ticket)
     │   ├── flight_mngt.java            # Flight Management
     │   ├── ticket_sales.java           # Ticket Sales
     │   ├── hr.java                     # Human Resources
@@ -48,6 +50,15 @@ Airport_Airline_term_project_ERP/
 | 5 | Partial class diagrams                                                       | 3      | 
 | 6 | Interface list                                                               | 2      |
 | 7 | Implementation (Java listing + working partial application)                  | 35     | 
+
+## Build and Run
+
+Run from the repository root (data paths are relative to it):
+
+```
+javac -d out src/erp/*.java src/erp/AircraftManagement/*.java src/erp/TicketSales/*.java
+java -cp out erp.terminal_ui
+```
 
 ## Conventions
 

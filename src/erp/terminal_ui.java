@@ -2,12 +2,19 @@ package erp;
 
 import erp.AircraftManagement.AircraftFileRepository;
 import erp.AircraftManagement.AircraftManagementService;
+import erp.TicketSales.FlightFileRepository;
+import erp.TicketSales.TicketFileRepository;
+import erp.TicketSales.TicketSalesService;
+import erp.TicketSales.TicketSalesTerminal;
 import java.util.Scanner;
 
 public class terminal_ui {
 
     private static AircraftManagementService aircraftService =
             new AircraftManagementService(new AircraftFileRepository());
+
+    private static TicketSalesTerminal ticketSalesTerminal =
+            new TicketSalesTerminal(new TicketSalesService(new FlightFileRepository(), new TicketFileRepository()));
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -17,7 +24,7 @@ public class terminal_ui {
             System.out.println("MAIN                   ERP Main Menu");
             System.out.println("\nSelect one of the following:\n");
             System.out.println("     1. Register new aircraft");
-            System.out.println("     2. (Placeholder)");
+            System.out.println("     2. Purchase ticket");
             System.out.println("\n     90. Sign off\n");
             System.out.print("Selection or command\n===> ");
 
@@ -28,8 +35,7 @@ public class terminal_ui {
                     aircraftService.handleRegistration(scanner);
                     break;
                 case "2":
-                    System.out.println("\n(Placeholder). Press Enter to return.");
-                    scanner.nextLine();
+                    ticketSalesTerminal.handlePurchaseTicket(scanner);
                     break;
                 case "90":
                     running = false;
@@ -42,4 +48,4 @@ public class terminal_ui {
         }
         scanner.close();
     }
-}
+}
