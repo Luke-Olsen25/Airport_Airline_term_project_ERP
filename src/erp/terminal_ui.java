@@ -1,11 +1,15 @@
 package erp;
 
+import erp.AircraftManagement.AircraftFileRepository;
+import erp.AircraftManagement.AircraftManagementService;
 import java.util.Scanner;
 
 public class terminal_ui {
 
+    private static AircraftManagementService aircraftService =
+            new AircraftManagementService(new AircraftFileRepository());
+
     public static void main(String[] args) {
-        aircraft_mngt.initializeStorage();
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
 
@@ -21,7 +25,7 @@ public class terminal_ui {
 
             switch (choice) {
                 case "1":
-                    handleRegistration(scanner);
+                    aircraftService.handleRegistration(scanner);
                     break;
                 case "2":
                     System.out.println("\n(Placeholder). Press Enter to return.");
@@ -37,41 +41,5 @@ public class terminal_ui {
             }
         }
         scanner.close();
-    }
-
-    private static void handleRegistration(Scanner scanner) {
-        System.out.println("\n--- AIRCRAFT REGISTRATION ---");
-        System.out.print("Enter Tail Number (e.g., N12345): ");
-        String tailNumber = scanner.nextLine();
-
-        System.out.print("Enter Manufacturer (e.g., Boeing): ");
-        String manufacturer = scanner.nextLine();
-
-        System.out.print("Enter Model (e.g., 737-800): ");
-        String model = scanner.nextLine();
-
-        System.out.print("Enter Serial Number (e.g., 185-0765): ");
-        String serialNumber = scanner.nextLine();
-
-        System.out.print("Enter Max Flight Range (e.g., 3100): ");
-        int maxFlightRange = scanner.nextInt();
-
-        System.out.print("Enter Seating Capacity (e.g., 135): ");
-        int seatingCapacity = scanner.nextInt();
-
-        // Consume the newline character
-        scanner.nextLine();
-
-
-        boolean success = aircraft_mngt.registerAircraft(tailNumber, manufacturer, model, serialNumber, maxFlightRange, seatingCapacity);
-
-        if (success) {
-            System.out.println("\n[SUCCESS] Aircraft " + tailNumber + " registered.");
-        } else {
-            System.out.println("\n[ERROR] Registration failed. Tail number " + tailNumber + " may already exist.");
-        }
-
-        System.out.print("\nPress Enter to return to Main Menu...");
-        scanner.nextLine();
     }
 }
