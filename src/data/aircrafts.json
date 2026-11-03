@@ -1,4 +1,5 @@
 [
   {"tailNumber": "N12347", "manufacturer": "Boeing", "model": "737-800", "serialNumber": "189-9880", "maxFlightRange": 3100, "seatingCapacity": 155, "status": "GROUNDED_PENDING_INSPECTION"},
-  {"tailNumber": "N8765", "manufacturer": "Boeing", "model": "737-800", "serialNumber": "145-0778", "maxFlightRange": 3100, "seatingCapacity": 185, "status": "GROUNDED_PENDING_INSPECTION"}
+  {"tailNumber": "N8765", "manufacturer": "Boeing", "model": "737-800", "serialNumber": "145-0778", "maxFlightRange": 3100, "seatingCapacity": 185, "status": "GROUNDED_PENDING_INSPECTION"},
+  {"tailNumber": "N12345", "manufacturer": "Boeing", "model": "737", "serialNumber": "185", "maxFlightRange": 3100, "seatingCapacity": 135, "status": "GROUNDED_PENDING_INSPECTION"}
 ]

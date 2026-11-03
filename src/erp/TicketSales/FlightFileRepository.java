@@ -3,6 +3,8 @@ package erp.TicketSales;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -11,14 +13,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Reads flights from src/data/flights.json (owned by Flight Management) and
- * the seats for sale from src/data/seats.json (owned by Ticket Sales).
- * Only seats.json is ever written by Ticket Sales.
- * Files hold a JSON array with one object per line, like aircrafts.json.
+ * Reads flights from src/data/flights.txt (owned by Flight Management) and
+ * the seats for sale from src/data/seats.txt (owned by Ticket Sales).
+ * Only seats.txt is ever written by Ticket Sales. One record per line, fields separated by '|':
+ *
+ * flights.txt: flightNumber|origin|destination|date|departureTime|arrivalTime|tailNumber
+ * seats.txt:   flightNumber|seatNumber|seatClass|price|AVAILABLE or SOLD
  */
 public class FlightFileRepository implements IFlightRepository {
-    private static final String FLIGHTS_FILE = "src/data/flights.json";
-    private static final String SEATS_FILE = "src/data/seats.json";
+    private static final String FLIGHTS_FILE = "src/data/flights.txt";
+    private static final String SEATS_FILE = "src/data/seats.txt";
 
     @Override
     public void initializeStorage() {
@@ -28,10 +32,8 @@ public class FlightFileRepository implements IFlightRepository {
                 directory.mkdirs();
             }
             File file = new File(SEATS_FILE);
-            if (!file.exists() || file.length() == 0) {
-                try (FileWriter writer = new FileWriter(file)) {
-                    writer.write("[]");
-                }
+            if (!file.exists()) {
+                file.createNewFile();
             }
         } catch (IOException e) {
             System.out.println("Storage initialization error: " + e.getMessage());
@@ -41,24 +43,22 @@ public class FlightFileRepository implements IFlightRepository {
     @Override
     public List<Flight> loadFlights() {
         Map<String, Flight> flights = new LinkedHashMap<String, Flight>();
-        for (String line : JsonLines.readObjects(FLIGHTS_FILE)) {
+        for (String[] p : readRecords(FLIGHTS_FILE, 6)) {
             try {
-                Flight f = new Flight(JsonLines.getField(line, "flightNumber"), JsonLines.getField(line, "origin"),
-                        JsonLines.getField(line, "destination"), LocalDate.parse(JsonLines.getField(line, "date")),
-                        LocalTime.parse(JsonLines.getField(line, "departureTime")), LocalTime.parse(JsonLines.getField(line, "arrivalTime")));
+                Flight f = new Flight(p[0], p[1], p[2], LocalDate.parse(p[3]),
+                        LocalTime.parse(p[4]), LocalTime.parse(p[5]));
                 flights.put(f.getFlightNumber(), f);
             } catch (RuntimeException e) {
-                System.out.println("Skipping unreadable flight record: " + line);
+                System.out.println("Skipping unreadable flight record: " + String.join("|", p));
             }
         }
-        for (String line : JsonLines.readObjects(SEATS_FILE)) {
-            Flight f = flights.get(JsonLines.getField(line, "flightNumber"));
+        for (String[] p : readRecords(SEATS_FILE, 5)) {
+            Flight f = flights.get(p[0]);
             if (f == null) continue;
             try {
-                f.addSeat(new Seat(JsonLines.getField(line, "seatNumber"), SeatClass.valueOf(JsonLines.getField(line, "seatClass")),
-                        Double.parseDouble(JsonLines.getField(line, "price")), "SOLD".equals(JsonLines.getField(line, "status"))));
+                f.addSeat(new Seat(p[1], SeatClass.valueOf(p[2]), Double.parseDouble(p[3]), "SOLD".equals(p[4])));
             } catch (RuntimeException e) {
-                System.out.println("Skipping unreadable seat record: " + line);
+                System.out.println("Skipping unreadable seat record: " + String.join("|", p));
             }
         }
         return new ArrayList<Flight>(flights.values());
@@ -66,22 +66,32 @@ public class FlightFileRepository implements IFlightRepository {
 
     @Override
     public void saveSeats(List<Flight> flights) {
-        StringBuilder content = new StringBuilder("[");
-        boolean first = true;
-        for (Flight f : flights) {
-            for (Seat s : f.getAllSeats()) {
-                content.append(first ? "\n  " : ",\n  ");
-                content.append(String.format("{\"flightNumber\": \"%s\", \"seatNumber\": \"%s\", \"seatClass\": \"%s\", \"price\": %.2f, \"status\": \"%s\"}",
-                        f.getFlightNumber(), s.getSeatNumber(), s.getSeatClass().name(), s.getPrice(),
-                        s.isAvailable() ? "AVAILABLE" : "SOLD"));
-                first = false;
-            }
-        }
-        content.append(first ? "]" : "\n]");
         try (FileWriter writer = new FileWriter(SEATS_FILE, false)) {
-            writer.write(content.toString());
+            for (Flight f : flights) {
+                for (Seat s : f.getAllSeats()) {
+                    writer.write(f.getFlightNumber() + "|" + s.getSeatNumber() + "|" + s.getSeatClass() + "|"
+                            + String.format("%.2f", s.getPrice()) + "|" + (s.isAvailable() ? "AVAILABLE" : "SOLD")
+                            + System.lineSeparator());
+                }
+            }
         } catch (IOException e) {
             throw new RuntimeException("Storage write error: " + e.getMessage(), e);
         }
+    }
+
+    /** Splits each non-blank line of a file on '|'; skips lines with too few fields. */
+    static List<String[]> readRecords(String file, int minFields) {
+        List<String[]> result = new ArrayList<String[]>();
+        try {
+            if (!new File(file).exists()) return result;
+            for (String line : Files.readAllLines(Paths.get(file))) {
+                if (line.trim().isEmpty()) continue;
+                String[] p = line.trim().split("\\|");
+                if (p.length >= minFields) result.add(p);
+            }
+        } catch (IOException e) {
+            System.out.println("Could not read " + file + ": " + e.getMessage());
+        }
+        return result;
     }
 }

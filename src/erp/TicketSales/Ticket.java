@@ -53,15 +53,6 @@ public class Ticket {
     public PaymentMethod getPaymentMethod() { return paymentMethod; }
     public LocalDateTime getIssuedAt() { return issuedAt; }
 
-    public String toJson() {
-        return String.format("{\"ticketNumber\": \"%s\", \"flightNumber\": \"%s\", \"flightDate\": \"%s\", \"origin\": \"%s\", "
-                + "\"destination\": \"%s\", \"seatNumber\": \"%s\", \"seatClass\": \"%s\", \"passengerName\": \"%s\", "
-                + "\"passengerEmail\": \"%s\", \"passengerPhone\": \"%s\", \"amountPaid\": %.2f, \"paymentMethod\": \"%s\", "
-                + "\"issuedAt\": \"%s\"}",
-                ticketNumber, flightNumber, flightDate, origin, destination, seatNumber, seatClass.name(),
-                passengerName, passengerEmail, passengerPhone, amountPaid, paymentMethod.name(), issuedAt.withNano(0));
-    }
-
     @Override
     public String toString() {
         DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");

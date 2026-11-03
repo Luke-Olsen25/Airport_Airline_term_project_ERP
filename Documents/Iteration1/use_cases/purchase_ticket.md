@@ -6,8 +6,8 @@
 | Department | Ticket Sales |
 | Primary actor | Ticket Agent (sells on behalf of the passenger) |
 | Stakeholders | Passenger: wants a confirmed seat and a ticket. Airline: wants payment collected and the seat recorded as sold. Airport Operations: needs the ticket record for check-in and boarding. |
-| Preconditions | Flights exist in `src/data/flights.json` and their seats for sale exist in `src/data/seats.json`. |
-| Postconditions | A Ticket is created and saved to `src/data/tickets.json`; the seat is marked SOLD in `src/data/seats.json`; payment is recorded on the ticket. |
+| Preconditions | Flights exist in `src/data/flights.txt` and their seats for sale exist in `src/data/seats.txt`. |
+| Postconditions | A Ticket is created and saved to `src/data/tickets.txt`; the seat is marked SOLD in `src/data/seats.txt`; payment is recorded on the ticket. |
 
 ## Main success scenario
 

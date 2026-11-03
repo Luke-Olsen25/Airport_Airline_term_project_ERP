@@ -24,9 +24,9 @@ public class Passenger {
         this.phone = phone;
     }
 
-    /** Trims input and strips quotes and backslashes so the value is safe to write into a JSON file. */
+    /** Trims input and strips the '|' character used as the field separator in the data files. */
     private static String clean(String s) {
-        return s == null ? "" : s.replace("\"", "").replace("\\", "").trim();
+        return s == null ? "" : s.replace("|", "").trim();
     }
 
     public String getName() { return name; }

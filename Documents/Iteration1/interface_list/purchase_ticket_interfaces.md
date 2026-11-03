@@ -15,8 +15,8 @@
 
 | Interface | Methods | Implemented by |
 | --- | --- | --- |
-| IFlightRepository | initializeStorage() : void; loadFlights() : List&lt;Flight&gt;; saveSeats(flights : List&lt;Flight&gt;) : void | FlightFileRepository (`src/data/flights.json` read-only, `src/data/seats.json`) |
-| ITicketRepository | initializeStorage() : void; nextTicketNumber() : String; save(t : Ticket) : boolean; loadAll() : List&lt;Ticket&gt; | TicketFileRepository (`src/data/tickets.json`) |
+| IFlightRepository | initializeStorage() : void; loadFlights() : List&lt;Flight&gt;; saveSeats(flights : List&lt;Flight&gt;) : void | FlightFileRepository (`src/data/flights.txt` read-only, `src/data/seats.txt`) |
+| ITicketRepository | initializeStorage() : void; nextTicketNumber() : String; save(t : Ticket) : boolean; loadAll() : List&lt;Ticket&gt; | TicketFileRepository (`src/data/tickets.txt`) |
 
 ## Menu entry point
 
@@ -24,10 +24,10 @@
 
 ## Data files
 
-JSON array, one object per line (same layout as `aircrafts.json`). Read with `JsonLines.getField`, no full parser.
+Plain text, one record per line, fields separated by `|`, in the column order listed below.
 
 | File | Owner | Fields |
 | --- | --- | --- |
-| flights.json | Flight Management (sample data until Schedule Flight is done) | flightNumber, origin, destination, date, departureTime, arrivalTime, tailNumber |
-| seats.json | Ticket Sales | flightNumber, seatNumber, seatClass, price, status (AVAILABLE or SOLD) |
-| tickets.json | Ticket Sales | ticketNumber, flightNumber, flightDate, origin, destination, seatNumber, seatClass, passengerName, passengerEmail, passengerPhone, amountPaid, paymentMethod, issuedAt |
+| flights.txt | Flight Management (sample data until Schedule Flight is done) | flightNumber, origin, destination, date, departureTime, arrivalTime, tailNumber |
+| seats.txt | Ticket Sales | flightNumber, seatNumber, seatClass, price, status (AVAILABLE or SOLD) |
+| tickets.txt | Ticket Sales | ticketNumber, flightNumber, flightDate, origin, destination, seatNumber, seatClass, passengerName, passengerEmail, passengerPhone, amountPaid, paymentMethod, issuedAt |

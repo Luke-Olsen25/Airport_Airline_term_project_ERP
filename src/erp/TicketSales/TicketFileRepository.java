@@ -10,9 +10,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Stores issued tickets in src/data/tickets.json, one JSON object per line. */
+/**
+ * Stores issued tickets in src/data/tickets.txt, one per line, fields separated by '|':
+ * ticketNumber|flightNumber|flightDate|origin|destination|seatNumber|seatClass|
+ * passengerName|passengerEmail|passengerPhone|amountPaid|paymentMethod|issuedAt
+ */
 public class TicketFileRepository implements ITicketRepository {
-    private static final String DATA_FILE = "src/data/tickets.json";
+    private static final String DATA_FILE = "src/data/tickets.txt";
 
     @Override
     public void initializeStorage() {
@@ -22,10 +26,8 @@ public class TicketFileRepository implements ITicketRepository {
                 directory.mkdirs();
             }
             File file = new File(DATA_FILE);
-            if (!file.exists() || file.length() == 0) {
-                try (FileWriter writer = new FileWriter(file)) {
-                    writer.write("[]");
-                }
+            if (!file.exists()) {
+                file.createNewFile();
             }
         } catch (IOException e) {
             System.out.println("Storage initialization error: " + e.getMessage());
@@ -45,22 +47,16 @@ public class TicketFileRepository implements ITicketRepository {
         return String.format("TK%06d", max + 1);
     }
 
-    /** Inserts the ticket before the closing bracket, the same way AircraftFileRepository does. */
+    /** Appends the ticket as one new line at the end of the file. */
     @Override
-    public boolean save(Ticket ticket) {
-        try {
-            String content = new String(Files.readAllBytes(Paths.get(DATA_FILE))).trim();
-            if (content.isEmpty() || content.equals("[]")) {
-                content = "[\n  " + ticket.toJson() + "\n]";
-            } else {
-                int lastBracketIndex = content.lastIndexOf("]");
-                String prefix = content.substring(0, lastBracketIndex).trim();
-                prefix += prefix.endsWith("[") ? "\n  " : ",\n  ";
-                content = prefix + ticket.toJson() + "\n]";
-            }
-            try (FileWriter writer = new FileWriter(DATA_FILE, false)) {
-                writer.write(content);
-            }
+    public boolean save(Ticket t) {
+        String line = String.join("|", t.getTicketNumber(), t.getFlightNumber(), t.getFlightDate().toString(),
+                t.getOrigin(), t.getDestination(), t.getSeatNumber(), t.getSeatClass().name(),
+                t.getPassengerName(), t.getPassengerEmail(), t.getPassengerPhone(),
+                String.format("%.2f", t.getAmountPaid()), t.getPaymentMethod().name(),
+                t.getIssuedAt().withNano(0).toString());
+        try (FileWriter writer = new FileWriter(DATA_FILE, true)) {
+            writer.write(line + System.lineSeparator());
             return true;
         } catch (IOException e) {
             System.out.println("Storage write error: " + e.getMessage());
@@ -71,22 +67,15 @@ public class TicketFileRepository implements ITicketRepository {
     @Override
     public List<Ticket> loadAll() {
         List<Ticket> result = new ArrayList<Ticket>();
-        for (String line : JsonLines.readObjects(DATA_FILE)) {
+        for (String[] p : FlightFileRepository.readRecords(DATA_FILE, 13)) {
             try {
-                result.add(new Ticket(field(line, "ticketNumber"), field(line, "flightNumber"),
-                        LocalDate.parse(field(line, "flightDate")), field(line, "origin"), field(line, "destination"),
-                        field(line, "seatNumber"), SeatClass.valueOf(field(line, "seatClass")),
-                        field(line, "passengerName"), field(line, "passengerEmail"), field(line, "passengerPhone"),
-                        Double.parseDouble(field(line, "amountPaid")), PaymentMethod.valueOf(field(line, "paymentMethod")),
-                        LocalDateTime.parse(field(line, "issuedAt"))));
+                result.add(new Ticket(p[0], p[1], LocalDate.parse(p[2]), p[3], p[4], p[5],
+                        SeatClass.valueOf(p[6]), p[7], p[8], p[9], Double.parseDouble(p[10]),
+                        PaymentMethod.valueOf(p[11]), LocalDateTime.parse(p[12])));
             } catch (RuntimeException e) {
-                System.out.println("Skipping unreadable ticket record: " + line);
+                System.out.println("Skipping unreadable ticket record: " + String.join("|", p));
             }
         }
         return result;
-    }
-
-    private static String field(String line, String key) {
-        return JsonLines.getField(line, key);
     }
 }
