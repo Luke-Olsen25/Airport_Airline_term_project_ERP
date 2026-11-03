@@ -13,14 +13,14 @@ public class terminal_ui {
     private static HumanResourcesService hrService =
             new HumanResourcesService(new EmployeeFileRepository());
 
-    public static void main(String[] args) {
+    public static void run() {
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
 
         while (running) {
             System.out.println("MAIN                   ERP Main Menu");
             System.out.println("\nSelect one of the following:\n");
-            System.out.println("     1. Register new aircraft");
+            System.out.println("    1. Register new aircraft");
             System.out.println("    2. Assign Gate");
             System.out.println("    3. View Gate Assignments");
             System.out.println("    4. Hire new employee");
