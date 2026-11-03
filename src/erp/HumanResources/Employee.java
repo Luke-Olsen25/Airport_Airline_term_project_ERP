@@ -57,18 +57,10 @@ public class Employee {
         return assignedFlights;
     }
 
-    public String toJson() {
-        // Format assigned flights as a JSON array of strings, e.g. ["FL100", "FL200"]
-        StringBuilder flights = new StringBuilder("[");
-        for (int i = 0; i < assignedFlights.size(); i++) {
-            if (i > 0) {
-                flights.append(", ");
-            }
-            flights.append("\"").append(assignedFlights.get(i)).append("\"");
-        }
-        flights.append("]");
-
-        return String.format("{\"employeeId\": \"%s\", \"firstName\": \"%s\", \"lastName\": \"%s\", \"role\": \"%s\", \"hireDate\": \"%s\", \"annualSalary\": %d, \"status\": \"%s\", \"assignedFlights\": %s}",
-                employeeID, firstName, lastName, role.name(), hireDate, annualSalary, status.name(), flights);
+    // One line of the employee text file, fields separated by '|' and assigned flights by ';'
+    public String toText() {
+        return String.format("%s|%s|%s|%s|%s|%d|%s|%s",
+                employeeID, firstName, lastName, role.name(), hireDate, annualSalary, status.name(),
+                String.join(";", assignedFlights));
     }
 }
