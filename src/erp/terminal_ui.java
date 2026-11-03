@@ -21,7 +21,9 @@ public class terminal_ui {
             System.out.println("MAIN                   ERP Main Menu");
             System.out.println("\nSelect one of the following:\n");
             System.out.println("     1. Register new aircraft");
-            System.out.println("     2. Hire new employee");
+            System.out.println("    2. Assign Gate");
+            System.out.println("    3. View Gate Assignments");
+            System.out.println("    4. Hire new employee");
             System.out.println("\n     90. Sign off\n");
             System.out.print("Selection or command\n===> ");
 
@@ -32,7 +34,13 @@ public class terminal_ui {
                     aircraftService.handleRegistration(scanner);
                     break;
                 case "2":
-                    hrService.handleHiring(scanner);
+                    airport_ops.assignGate(scanner);
+                    break;
+                case "3":
+                     airport_ops.showAssignments();
+                     break;
+                case "4":
+                      hrService.handleHiring(scanner);
                     break;
                 case "90":
                     running = false;
