@@ -1,0 +1,9 @@
+[
+  {"employeeId": "E482913", "firstName": "Mark", "lastName": "Chavez", "role": "PILOT", "hireDate": "2021-03-15", "annualSalary": 145000, "status": "ACTIVE", "assignedFlights": []},
+  {"employeeId": "E071846", "firstName": "Priya", "lastName": "Natarajan", "role": "CO_PILOT", "hireDate": "2022-07-01", "annualSalary": 98000, "status": "ACTIVE", "assignedFlights": []},
+  {"employeeId": "E935207", "firstName": "Jordan", "lastName": "Reyes", "role": "FLIGHT_ATTENDANT", "hireDate": "2023-01-09", "annualSalary": 52000, "status": "ACTIVE", "assignedFlights": []},
+  {"employeeId": "E260584", "firstName": "Samuel", "lastName": "Okafor", "role": "BAGGAGE_HANDLER", "hireDate": "2020-11-23", "annualSalary": 41000, "status": "ACTIVE", "assignedFlights": []},
+  {"employeeId": "E718390", "firstName": "Elena", "lastName": "Kowalski", "role": "MAINTENANCE_TECHNICIAN", "hireDate": "2019-05-06", "annualSalary": 78000, "status": "ACTIVE", "assignedFlights": []},
+  {"employeeId": "E549162", "firstName": "Chris", "lastName": "Tanaka", "role": "GATE_AGENT", "hireDate": "2024-02-12", "annualSalary": 39000, "status": "ACTIVE", "assignedFlights": []},
+  {"employeeId": "E037742", "firstName": "Luke", "lastName": "Olsen", "role": "GATE_AGENT", "hireDate": "2026-11-02", "annualSalary": 60000, "status": "ACTIVE", "assignedFlights": []}
+]
