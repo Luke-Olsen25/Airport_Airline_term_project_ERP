@@ -16,7 +16,7 @@ public class terminal_ui {
     private static TicketSalesTerminal ticketSalesTerminal =
             new TicketSalesTerminal(new TicketSalesService(new FlightFileRepository(), new TicketFileRepository()));
 
-    public static void main(String[] args) {
+    public static void run() {
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
 
