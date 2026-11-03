@@ -5,11 +5,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 public class EmployeeFileRepository implements IEmployeeRepository {
-    private static final String DATA_FILE = "src/data/employee.json";
+    private static final String DATA_FILE = "src/data/employee.txt";
+    private static final String HEADER = "employeeId|firstName|lastName|role|hireDate|annualSalary|status|assignedFlights";
 
     @Override
+    /**    (non-Javadoc)
+     * Initialize file with a header line naming each field
+     * @see erp.HumanResources.IEmployeeRepository#initializeStorage()
+     */
     public void initializeStorage() {
         try {
             File directory = new File("src/data");
@@ -19,13 +25,12 @@ public class EmployeeFileRepository implements IEmployeeRepository {
             File file = new File(DATA_FILE);
             if (!file.exists()) {
                 file.createNewFile();
-                // Initialize empty JSON array structure
                 try (FileWriter writer = new FileWriter(file)) {
-                    writer.write("[]");
+                    writer.write(HEADER + "\n");
                 }
             } else if (file.length() == 0) {
                 try (FileWriter writer = new FileWriter(file)) {
-                    writer.write("[]");
+                    writer.write(HEADER + "\n");
                 }
             }
         } catch (IOException e) {
@@ -34,39 +39,33 @@ public class EmployeeFileRepository implements IEmployeeRepository {
     }
 
     @Override
+    /**    (non-Javadoc)
+     * Skip the header line and compare the first field of each record
+     * @see erp.HumanResources.IEmployeeRepository#existsByEmployeeID(java.lang.String)
+     */
     public boolean existsByEmployeeID(String employeeID) {
         try {
-            String content = new String(Files.readAllBytes(Paths.get(DATA_FILE)));
-            return content.contains("\"employeeId\": \"" + employeeID + "\"");
+            List<String> lines = Files.readAllLines(Paths.get(DATA_FILE));
+            for (int i = 1; i < lines.size(); i++) {
+                String[] fields = lines.get(i).split("\\|");
+                if (fields[0].equals(employeeID)) {
+                    return true;
+                }
+            }
+            return false;
         } catch (IOException e) {
             return false;
         }
     }
 
     @Override
+    /**    (non-Javadoc)
+     * Append the new employee as its own line at the end of the file
+     * @see erp.HumanResources.IEmployeeRepository#save(erp.HumanResources.Employee)
+     */
     public boolean save(Employee employee) {
-        try {
-            String content = new String(Files.readAllBytes(Paths.get(DATA_FILE))).trim();
-
-            if (content.isEmpty() || content.equals("[]")) {
-                content = "[\n  " + employee.toJson() + "\n]";
-            } else {
-                // Insert new employee before closing JSON bracket
-                int lastBracketIndex = content.lastIndexOf("]");
-                if (lastBracketIndex != -1) {
-                    String prefix = content.substring(0, lastBracketIndex).trim();
-                    if (!prefix.endsWith("[")) {
-                        prefix += ",\n  ";
-                    } else {
-                        prefix += "\n  ";
-                    }
-                    content = prefix + employee.toJson() + "\n]";
-                }
-            }
-
-            try (FileWriter writer = new FileWriter(DATA_FILE, false)) {
-                writer.write(content);
-            }
+        try (FileWriter writer = new FileWriter(DATA_FILE, true)) {
+            writer.write(employee.toText() + "\n");
             return true;
         } catch (IOException e) {
             System.out.println("Storage write error: " + e.getMessage());
