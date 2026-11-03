@@ -4,6 +4,8 @@ import erp.AircraftManagement.AircraftFileRepository;
 import erp.AircraftManagement.AircraftManagementService;
 import erp.HumanResources.EmployeeFileRepository;
 import erp.HumanResources.HumanResourcesService;
+import erp.FlightManagement.FlightFileRepository;
+import erp.FlightManagement.FlightManagementService;
 import java.util.Scanner;
 
 public class terminal_ui {
@@ -12,7 +14,8 @@ public class terminal_ui {
             new AircraftManagementService(new AircraftFileRepository());
     private static HumanResourcesService hrService =
             new HumanResourcesService(new EmployeeFileRepository());
-
+    private static FlightManagementService flightService =
+        new FlightManagementService(new FlightFileRepository());
     public static void run() {
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
@@ -24,6 +27,8 @@ public class terminal_ui {
             System.out.println("    2. Assign Gate");
             System.out.println("    3. View Gate Assignments");
             System.out.println("    4. Hire new employee");
+            System.out.println("    5. Schedule Flight");
+            System.out.println("    6. View Scheduled Flights");
             System.out.println("\n     90. Sign off\n");
             System.out.print("Selection or command\n===> ");
 
@@ -41,6 +46,12 @@ public class terminal_ui {
                      break;
                 case "4":
                       hrService.handleHiring(scanner);
+                    break;
+                case "5":
+                      flightService.handleScheduling(scanner);
+                    break;
+                case "6":
+                      flightService.showScheduledFlights();
                     break;
                 case "90":
                     running = false;
