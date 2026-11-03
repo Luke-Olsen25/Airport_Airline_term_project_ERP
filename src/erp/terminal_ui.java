@@ -2,33 +2,29 @@ package erp;
 
 import erp.AircraftManagement.AircraftFileRepository;
 import erp.AircraftManagement.AircraftManagementService;
-import erp.HumanResources.EmployeeFileRepository;
-import erp.HumanResources.HumanResourcesService;
-import erp.FlightManagement.FlightFileRepository;
-import erp.FlightManagement.FlightManagementService;
+import erp.TicketSales.FlightFileRepository;
+import erp.TicketSales.TicketFileRepository;
+import erp.TicketSales.TicketSalesService;
+import erp.TicketSales.TicketSalesTerminal;
 import java.util.Scanner;
 
 public class terminal_ui {
 
     private static AircraftManagementService aircraftService =
             new AircraftManagementService(new AircraftFileRepository());
-    private static HumanResourcesService hrService =
-            new HumanResourcesService(new EmployeeFileRepository());
-    private static FlightManagementService flightService =
-        new FlightManagementService(new FlightFileRepository());
-    public static void run() {
+
+    private static TicketSalesTerminal ticketSalesTerminal =
+            new TicketSalesTerminal(new TicketSalesService(new FlightFileRepository(), new TicketFileRepository()));
+
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
 
         while (running) {
             System.out.println("MAIN                   ERP Main Menu");
             System.out.println("\nSelect one of the following:\n");
-            System.out.println("    1. Register new aircraft");
-            System.out.println("    2. Assign Gate");
-            System.out.println("    3. View Gate Assignments");
-            System.out.println("    4. Hire new employee");
-            System.out.println("    5. Schedule Flight");
-            System.out.println("    6. View Scheduled Flights");
+            System.out.println("     1. Register new aircraft");
+            System.out.println("     2. Purchase ticket");
             System.out.println("\n     90. Sign off\n");
             System.out.print("Selection or command\n===> ");
 
@@ -39,19 +35,7 @@ public class terminal_ui {
                     aircraftService.handleRegistration(scanner);
                     break;
                 case "2":
-                    airport_ops.assignGate(scanner);
-                    break;
-                case "3":
-                     airport_ops.showAssignments();
-                     break;
-                case "4":
-                      hrService.handleHiring(scanner);
-                    break;
-                case "5":
-                      flightService.handleScheduling(scanner);
-                    break;
-                case "6":
-                      flightService.showScheduledFlights();
+                    ticketSalesTerminal.handlePurchaseTicket(scanner);
                     break;
                 case "90":
                     running = false;
