@@ -29,7 +29,7 @@ public class terminal_ui {
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
 
-        while (running && scanner.hasNextLine()) {
+        while (running) {
             System.out.println("MAIN                   ERP Main Menu");
             System.out.println("\nSelect one of the following:\n");
             System.out.println("     1. Register new aircraft");
