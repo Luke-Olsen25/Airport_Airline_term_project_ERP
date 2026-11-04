@@ -28,6 +28,16 @@ public class Flight {
         String aircraftId,
         Gate gate
     ) {
+         this(flightId, flightNumber, airline, origin, destination,
+            departureTime, arrivalTime, aircraftId, gate, "Scheduled");
+    }
+    
+    
+    public Flight(String flightId, String flightNumber, String airline,
+        String origin, String destination, LocalDateTime departureTime,
+        LocalDateTime arrivalTime, String aircraftId, Gate gate,
+        String status) {
+
         this.flightId = flightId;
         this.flightNumber = flightNumber;
         this.airline = airline;
@@ -37,7 +47,7 @@ public class Flight {
         this.arrivalTime = arrivalTime;
         this.aircraftId = aircraftId;
         this.gate = gate;
-        this.status = "Scheduled";
+        this.status = status;
     }
     
     public String getFlightId() {

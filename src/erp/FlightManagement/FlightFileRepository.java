@@ -10,7 +10,7 @@ import java.util.List;
 
 public class FlightFileRepository {
 
-    private final Path filePath = Path.of("data", "flights.txt");
+    private final Path filePath = Path.of("src", "data", "scheduled_flights.txt");
 
     public void save(Flight flight) throws IOException {
         Files.createDirectories(filePath.getParent());
@@ -26,7 +26,8 @@ public class FlightFileRepository {
                 flight.getAircraftId(),
                 flight.getGate().getGateId(),
                 flight.getGate().getAirport(),
-                flight.getGate().getTerminal()
+                flight.getGate().getTerminal(),
+                flight.getStatus()
         );
 
         Files.writeString(
@@ -49,7 +50,7 @@ public class FlightFileRepository {
         for (String record : records) {
             String[] fields = record.split("\\|", -1);
 
-            if (fields.length != 11) {
+            if (fields.length != 12) {
                 continue;
             }
 
@@ -68,7 +69,8 @@ public class FlightFileRepository {
                     LocalDateTime.parse(fields[5]),
                     LocalDateTime.parse(fields[6]),
                     fields[7],
-                    gate
+                    gate,
+                    fields[11]
             );
 
             flights.add(flight);
