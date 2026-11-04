@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EmployeeFileRepository implements IEmployeeRepository {
@@ -71,5 +72,25 @@ public class EmployeeFileRepository implements IEmployeeRepository {
             System.out.println("Storage write error: " + e.getMessage());
             return false;
         }
+    }
+
+    @Override
+    /**    (non-Javadoc)
+     * Return every employee record line, skipping the header and blank lines
+     * @see erp.HumanResources.IEmployeeRepository#getAllEmployeeRecords()
+     */
+    public List<String> getAllEmployeeRecords() {
+        List<String> records = new ArrayList<>();
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(DATA_FILE));
+            for (int i = 1; i < lines.size(); i++) {
+                if (!lines.get(i).isBlank()) {
+                    records.add(lines.get(i));
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Storage read error: " + e.getMessage());
+        }
+        return records;
     }
 }

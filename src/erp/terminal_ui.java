@@ -38,8 +38,9 @@ public class terminal_ui {
             System.out.println("     4. Assign Gate");
             System.out.println("     5. View Gate Assignments");
             System.out.println("     6. Hire New employee");
-            System.out.println("     7. Schedule Flight");
-            System.out.println("     8. View Scheduled Flights");
+            System.out.println("     7. View Current Employees");
+            System.out.println("     8. Schedule Flight");
+            System.out.println("     9. View Scheduled Flights");
             System.out.println("\n     90. Sign Off\n");
             System.out.print("Selection or command\n===> ");
 
@@ -65,9 +66,12 @@ public class terminal_ui {
                     hrService.handleHiring(scanner);
                     break;
                 case "7":
-                    flightService.handleScheduling(scanner);
+                    hrService.handleViewEmployees(scanner);
                     break;
                 case "8":
+                    flightService.handleScheduling(scanner);
+                    break;
+                case "9":
                     flightService.showScheduledFlights();
                     break;
                 case "90":

@@ -1,5 +1,6 @@
 package erp.HumanResources;
 
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -47,6 +48,33 @@ public class HumanResourcesService {
             }
         } catch (IllegalArgumentException e) {
             System.out.println("\n[ABORTED] " + e.getMessage());
+        }
+
+        System.out.print("\nPress Enter to return to Main Menu...");
+        scanner.nextLine();
+    }
+
+    public void handleViewEmployees(Scanner scanner) {
+        System.out.println("\n--- CURRENT EMPLOYEES ---");
+        List<String> records = repository.getAllEmployeeRecords();
+        String format = "%-8s | %-12s | %-12s | %-22s | %-10s | %-10s | %-10s%n";
+        int shown = 0;
+
+        System.out.printf(format, "ID", "First Name", "Last Name", "Role", "Hire Date", "Salary", "Status");
+        System.out.println("-------------------------------------------------------------------------------------------------");
+
+        for (String record : records) {
+            // Limit -1 keeps the trailing empty assignedFlights field
+            String[] data = record.split("\\|", -1);
+            if (data.length < 7 || data[6].equals(EmployeeStatus.TERMINATED.name())) {
+                continue; // Skip malformed lines and terminated employees
+            }
+            System.out.printf(format, data[0], data[1], data[2], data[3], data[4], "$" + data[5], data[6]);
+            shown++;
+        }
+
+        if (shown == 0) {
+            System.out.println("No current employees found.");
         }
 
         System.out.print("\nPress Enter to return to Main Menu...");
