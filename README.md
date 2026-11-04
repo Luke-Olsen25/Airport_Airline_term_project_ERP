@@ -44,8 +44,7 @@ Airport_Airline_term_project_ERP/
     │   │   ├── Flight.java
     │   │   ├── Gate.java
     │   │   ├── FlightFileRepository.java
-    │   │   ├── FlightManagementService.java
-    │   │   └── data/flights.txt        # Not read by the code; the app uses src/data/
+    │   │   └──  FlightManagementService.java
     │   ├── HumanResources/             # Human Resources (Hire Employee, View Current Employees)
     │   │   ├── Employee.java
     │   │   ├── EmployeeRole.java
