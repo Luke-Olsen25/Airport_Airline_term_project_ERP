@@ -19,23 +19,64 @@ Airport_Airline_term_project_ERP/
 ├── README.md
 ├── Documents/
 │   ├── Iteration1/
-│   │   ├── inception_document/
-│   │   ├── use_cases/
-│   │   └── domain_model/
+│   │   ├── inception_document/         # Inception write-ups per department
+│   │   ├── use_cases/                  # One use case per person
+│   │   ├── domain_model/               # Domain model diagrams
+│   │   ├── communication_diagrams/     # Communication diagrams per system operation
+│   │   ├── class_diagrams/             # Partial class diagrams
+│   │   └── interface_list/             # Interface lists per use case
 │   ├── Iteration2/                     # Empty for now; will mirror Iteration1, no inception document
 │   └── Iteration3/                     # Empty for now; will mirror Iteration1, no inception document
 └── src/
-    ├── erp/                            # Java source, one file per department 
-    |   ├── main.java                   # Entry point
-    │   ├── terminal_ui.java            # Shared terminal screen helpers
-    │   ├── AircraftManagement/         # Aircraft Management package
-    │   ├── TicketSales/                # Ticket Sales package (Purchase Ticket)
-    │   ├── flight_mngt.java            # Flight Management
-    │   ├── ticket_sales.java           # Ticket Sales
-    │   ├── hr.java                     # Human Resources
-    │   ├── aircraft_mngt.java          # Aircraft Management
-    │   └── airport_ops.java            # Airport Operations
+    ├── erp/                            # Java source, one package per department
+    │   ├── main.java                   # Entry point
+    │   ├── terminal_ui.java            # Main menu; routes selections to each department
+    │   ├── airport_ops.java            # Airport Operations (Assign Gate, View Gate Assignments)
+    │   ├── flight_mngt.java            # Empty stub (Flight Management lives in FlightManagement/)
+    │   ├── ticket_sales.java           # Empty stub (Ticket Sales lives in TicketSales/)
+    │   ├── AircraftManagement/         # Aircraft Management (Register Aircraft, View Registered Aircrafts)
+    │   │   ├── Aircraft.java
+    │   │   ├── AircraftStatus.java
+    │   │   ├── IAircraftRepository.java
+    │   │   ├── AircraftFileRepository.java
+    │   │   └── AircraftManagementService.java
+    │   ├── FlightManagement/           # Flight Management (Schedule Flight, View Scheduled Flights)
+    │   │   ├── Flight.java
+    │   │   ├── Gate.java
+    │   │   ├── FlightFileRepository.java
+    │   │   ├── FlightManagementService.java
+    │   │   └── data/flights.txt        # Not read by the code; the app uses src/data/
+    │   ├── HumanResources/             # Human Resources (Hire Employee, View Current Employees)
+    │   │   ├── Employee.java
+    │   │   ├── EmployeeRole.java
+    │   │   ├── EmployeeStatus.java
+    │   │   ├── IEmployeeRepository.java
+    │   │   ├── EmployeeFileRepository.java
+    │   │   └── HumanResourcesService.java
+    │   └── TicketSales/                # Ticket Sales (Purchase Ticket)
+    │       ├── Flight.java
+    │       ├── FlightCatalog.java
+    │       ├── Seat.java
+    │       ├── SeatClass.java
+    │       ├── Passenger.java
+    │       ├── Payment.java
+    │       ├── PaymentMethod.java
+    │       ├── Ticket.java
+    │       ├── TicketSale.java
+    │       ├── IFlightRepository.java
+    │       ├── ITicketRepository.java
+    │       ├── FlightFileRepository.java
+    │       ├── TicketFileRepository.java
+    │       ├── TicketSalesService.java
+    │       └── TicketSalesTerminal.java
     └── data/                           # Flat-file storage (no DBMS)
+        ├── aircrafts.txt               # Aircraft Management
+        ├── employee.txt                # Human Resources
+        ├── scheduled_flights.txt       # Flight Management
+        ├── flights.txt                 # Flights offered for sale (read by Ticket Sales)
+        ├── seats.txt                   # Ticket Sales
+        ├── tickets.txt                 # Ticket Sales
+        └── gates.txt                   # Airport Operations
 ```
 
 
