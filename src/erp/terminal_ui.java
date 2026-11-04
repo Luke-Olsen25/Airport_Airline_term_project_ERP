@@ -32,14 +32,15 @@ public class terminal_ui {
         while (running) {
             System.out.println("MAIN                   ERP Main Menu");
             System.out.println("\nSelect one of the following:\n");
-            System.out.println("     1. Register new aircraft");
-            System.out.println("     2. Purchase ticket");
-            System.out.println("     3. Assign Gate");
-            System.out.println("     4. View Gate Assignments");
-            System.out.println("     5. Hire new employee");
-            System.out.println("     6. Schedule Flight");
-            System.out.println("     7. View Scheduled Flights");
-            System.out.println("\n     90. Sign off\n");
+            System.out.println("     1. Register New Aircraft");
+            System.out.println("     2. View Registered Aircrafts");
+            System.out.println("     3. Purchase Ticket");
+            System.out.println("     4. Assign Gate");
+            System.out.println("     5. View Gate Assignments");
+            System.out.println("     6. Hire New employee");
+            System.out.println("     7. Schedule Flight");
+            System.out.println("     8. View Scheduled Flights");
+            System.out.println("\n     90. Sign Off\n");
             System.out.print("Selection or command\n===> ");
 
             String choice = scanner.nextLine();
@@ -49,21 +50,24 @@ public class terminal_ui {
                     aircraftService.handleRegistration(scanner);
                     break;
                 case "2":
-                    ticketSalesTerminal.handlePurchaseTicket(scanner);
+                    aircraftService.handleViewAircrafts(scanner);
                     break;
                 case "3":
-                    airport_ops.assignGate(scanner);
+                    ticketSalesTerminal.handlePurchaseTicket(scanner);
                     break;
                 case "4":
-                    airport_ops.showAssignments();
+                    airport_ops.assignGate(scanner);
                     break;
                 case "5":
-                    hrService.handleHiring(scanner);
+                    airport_ops.showAssignments();
                     break;
                 case "6":
-                    flightService.handleScheduling(scanner);
+                    hrService.handleHiring(scanner);
                     break;
                 case "7":
+                    flightService.handleScheduling(scanner);
+                    break;
+                case "8":
                     flightService.showScheduledFlights();
                     break;
                 case "90":

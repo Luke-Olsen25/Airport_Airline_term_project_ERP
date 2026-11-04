@@ -1,5 +1,6 @@
 package erp.AircraftManagement;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class AircraftManagementService {
@@ -49,8 +50,33 @@ public class AircraftManagementService {
         scanner.nextLine();
     }
 
+    public void handleViewAircrafts(Scanner scanner) {
+        System.out.println("\n--- REGISTERED AIRCRAFTS ---");
+        List<String> records = repository.getAllAircraftRecords();
+
+        if (records.isEmpty()) {
+            System.out.println("No aircrafts are currently registered in the system.");
+        } else {
+            // Print a formatted table header
+            System.out.printf("%-10s | %-15s | %-10s | %-15s | %-10s | %-10s | %-25s%n",
+                    "Tail No.", "Manufacturer", "Model", "Serial No.", "Max Range", "Capacity", "Status");
+            System.out.println("-----------------------------------------------------------------------------------------------------------");
+
+            // Loop through each CSV line, split by comma, and print in columns
+            for (String record : records) {
+                String[] data = record.split(",");
+                if (data.length == 7) {
+                    System.out.printf("%-10s | %-15s | %-10s | %-15s | %-10s | %-10s | %-25s%n",
+                            data[0], data[1], data[2], data[3], data[4], data[5], data[6]);
+                }
+            }
+        }
+
+        System.out.print("\nPress Enter to return to Main Menu...");
+        scanner.nextLine();
+    }
+
     public boolean registerNewAircraft(Aircraft aircraft) throws IllegalArgumentException {
-        // Abort registration if negative values are input
         if (aircraft.getMaxFlightRange() < 0) {
             throw new IllegalArgumentException("Registration Aborted: Max Flight Range cannot be negative (" + aircraft.getMaxFlightRange() + ").");
         }

@@ -35,8 +35,15 @@ public class Aircraft {
         return seatingCapacity;
     }
 
-    public String toJson() {
-        return String.format("{\"tailNumber\": \"%s\", \"manufacturer\": \"%s\", \"model\": \"%s\", \"serialNumber\": \"%s\", \"maxFlightRange\": %d, \"seatingCapacity\": %d, \"status\": \"%s\"}",
-                tailNumber, manufacturer, model, serialNumber, maxFlightRange, seatingCapacity, status.name());
+    public String toFileRecord() {
+        return String.join(",",
+                tailNumber,
+                manufacturer,
+                model,
+                serialNumber,
+                String.valueOf(maxFlightRange),
+                String.valueOf(seatingCapacity),
+                status.name()
+        );
     }
 }
