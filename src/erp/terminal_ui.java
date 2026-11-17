@@ -51,6 +51,7 @@ public class terminal_ui {
             System.out.println("     10. Delete Registered Aircraft");
             System.out.println("     11. Schedule Maintenance");
             System.out.println("     12. Complete Maintenance");
+            System.out.println("     13. Update Gate Assignment");
             System.out.println("\n     90. Sign Off\n");
             System.out.print("Selection or command\n===> ");
 
@@ -92,6 +93,9 @@ public class terminal_ui {
                     break;
                 case "12":
                     maintenanceService.handleCompleteMaintenance(scanner);
+                    break;
+                case "13":
+                    airport_ops.updateGate(scanner);
                     break;
                 case "90":
                     running = false;
