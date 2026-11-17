@@ -1,144 +1,138 @@
-
 package erp;
 
-import java.io.*;
+import erp.AirportOperations.GateAssignment;
+import erp.AirportOperations.GateAssignmentFileRepository;
+import erp.AirportOperations.GateAssignmentService;
+import erp.AirportOperations.GateAssignmentService.GateResult;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
 
+/**
+ * Airport Operations console controller. Reads employee input and prints
+ * results; all gate rules are decided by GateAssignmentService.
+ */
 public class airport_ops {
 
-    private static final String FILE_NAME = "src/data/gates.txt";
+    private static GateAssignmentService service =
+            new GateAssignmentService(new GateAssignmentFileRepository());
 
-    private static final String[] GATES = {
-        "A1", "A2", "A3", "B1", "B2", "B3", "C1", "C2"
-    };
+    /** For tests: use a service backed by other files. */
+    public static void setService(GateAssignmentService replacement) {
+        service = replacement;
+    }
 
     public static void showAssignments() {
         System.out.println("\n--- Current Gate Assignments ---");
+        List<GateAssignment> assignments = service.getAssignments();
 
-        File file = new File(FILE_NAME);
-
-        if (!file.exists()) {
+        if (assignments.isEmpty()) {
             System.out.println("No gate assignments found.");
             return;
         }
-
-        try (Scanner reader = new Scanner(file)) {
-            boolean found = false;
-
-            while (reader.hasNextLine()) {
-                String line = reader.nextLine();
-                String[] data = line.split(",");
-
-                if (data.length == 2) {
-                    System.out.println("Flight: " + data[0]
-                            + " | Gate: " + data[1]);
-                    found = true;
-                }
-            }
-
-            if (!found) {
-                System.out.println("No gate assignments found.");
-            }
-
-        } catch (IOException e) {
-            System.out.println("Error reading assignments.");
+        for (GateAssignment a : assignments) {
+            System.out.println("Flight: " + a.getFlightId() + " | Gate: " + a.getGateId());
         }
     }
 
     public static void assignGate(Scanner scanner) {
         System.out.println("\n--- Assign Gate ---");
-
         showAssignments();
 
         System.out.print("\nEnter Flight ID: ");
         String flightId = scanner.nextLine().trim().toUpperCase();
-
         if (flightId.isEmpty()) {
             System.out.println("Flight ID cannot be empty.");
             return;
         }
 
         System.out.println("\nAirport Gates:");
-
-        for (String availableGate : GATES) {
-            System.out.println("Gate " + availableGate);
+        for (String gate : service.getValidGates()) {
+            System.out.println("Gate " + gate);
         }
-
         System.out.print("\nEnter Gate: ");
         String gate = scanner.nextLine().trim().toUpperCase();
 
-        boolean validGate = false;
-
-        for (String availableGate : GATES) {
-            if (availableGate.equals(gate)) {
-                validGate = true;
-                break;
-            }
+        GateResult result = service.assignGate(flightId, gate);
+        if (result == GateResult.OK) {
+            System.out.println("\nSuccess! Flight " + flightId + " assigned to Gate " + gate + ".");
+        } else if (result == GateResult.GATE_OCCUPIED) {
+            System.out.println("Gate is already assigned.");
+        } else {
+            System.out.println(messageFor(result, gate));
         }
+    }
 
-        if (!validGate) {
-            System.out.println("Invalid gate.");
+    public static void updateGate(Scanner scanner) {
+        System.out.println("\n--- Update Gate Assignment ---");
+        showAssignments();
+
+        System.out.print("\nEnter Flight ID: ");
+        String flightId = scanner.nextLine().trim().toUpperCase();
+        if (flightId.isEmpty()) {
+            System.out.println("Flight ID cannot be empty.");
             return;
         }
 
-        File file = new File(FILE_NAME);
+        Optional<GateAssignment> current = service.findByFlight(flightId);
+        if (!current.isPresent()) {
+            System.out.println(messageFor(GateResult.FLIGHT_NOT_ASSIGNED, null));
+            return;
+        }
+        String oldGate = current.get().getGateId();
+        System.out.println("Flight " + flightId + " is currently at Gate " + oldGate + ".");
 
-        try {
-            if (file.exists()) {
-                try (Scanner reader = new Scanner(file)) {
-                    while (reader.hasNextLine()) {
-                        String[] data = reader.nextLine().split(",");
+        System.out.println("\nGate availability:");
+        for (Map.Entry<String, String> e : service.getGateStatus().entrySet()) {
+            System.out.println("Gate " + e.getKey() + " - "
+                    + (e.getValue() == null ? "FREE" : "OCCUPIED by " + e.getValue()));
+        }
 
-                        if (data.length != 2) {
-                            continue;
-                        }
+        System.out.print("\nEnter New Gate: ");
+        String newGate = scanner.nextLine().trim().toUpperCase();
 
-                        if (data[0].equalsIgnoreCase(flightId)) {
-                            System.out.println(
-                                "Flight already has a gate assigned.");
-                            return;
-                        }
+        GateResult check = service.validateUpdate(flightId, newGate);
+        if (check != GateResult.OK) {
+            System.out.println(messageFor(check, newGate));
+            return;
+        }
 
-                        if (data[1].equalsIgnoreCase(gate)) {
-                            System.out.println(
-                                "Gate is already assigned.");
-                            return;
-                        }
-                    }
-                }
+        System.out.println("\nChange Flight " + flightId + ": Gate " + oldGate + " -> Gate " + newGate);
+        System.out.print("Confirm (Y/N)? ");
+        if (!scanner.nextLine().trim().equalsIgnoreCase("Y")) {
+            System.out.println("Update canceled. No changes made.");
+            return;
+        }
+
+        GateResult result = service.updateGate(flightId, newGate);
+        if (result == GateResult.OK || result == GateResult.OK_HISTORY_NOT_SAVED) {
+            System.out.println("\nSuccess! Flight " + flightId + " moved from Gate " + oldGate
+                    + " to Gate " + newGate + ".");
+            if (result == GateResult.OK_HISTORY_NOT_SAVED) {
+                System.out.println("Warning: the change was saved but could not be written to the gate history log.");
             }
+        } else {
+            System.out.println(messageFor(result, newGate));
+        }
+    }
 
-            File folder = file.getParentFile();
-
-            if (folder != null) {
-                folder.mkdirs();
-            }
-
-            try (RandomAccessFile writer =
-                    new RandomAccessFile(file, "rw")) {
-
-                long length = writer.length();
-
-                if (length > 0) {
-                    writer.seek(length - 1);
-                    int lastChar = writer.read();
-
-                    writer.seek(length);
-
-                    if (lastChar != '\n' && lastChar != '\r') {
-                        writer.writeBytes(System.lineSeparator());
-                    }
-                }
-
-                writer.writeBytes(flightId + "," + gate
-                        + System.lineSeparator());
-            }
-
-            System.out.println("\nSuccess! Flight " + flightId
-                    + " assigned to Gate " + gate + ".");
-
-        } catch (IOException e) {
-            System.out.println("Error saving gate assignment.");
+    private static String messageFor(GateResult result, String gate) {
+        switch (result) {
+            case EMPTY_FLIGHT:
+                return "Flight ID cannot be empty.";
+            case INVALID_GATE:
+                return "Invalid gate.";
+            case FLIGHT_NOT_ASSIGNED:
+                return "Flight has no gate assignment. Use Assign Gate first.";
+            case FLIGHT_ALREADY_ASSIGNED:
+                return "Flight already has a gate assigned.";
+            case SAME_GATE:
+                return "New gate is the same as the current gate.";
+            case GATE_OCCUPIED:
+                return "Gate " + gate + " is already assigned to another flight.";
+            default:
+                return "Error saving gate assignment. No changes were made.";
         }
     }
 }
