@@ -1,6 +1,7 @@
 package erp.FlightManagement;
 
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -9,12 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FlightFileRepository {
-
-    private final Path filePath = Path.of("src", "data", "scheduled_flights.txt");
+    private final Path filePath = FileSystems.getDefault().getPath("data", "scheduled_flights.txt");
 
     public void save(Flight flight) throws IOException {
-        Files.createDirectories(filePath.getParent());
-
         String record = String.join("|",
                 flight.getFlightId(),
                 flight.getFlightNumber(),
