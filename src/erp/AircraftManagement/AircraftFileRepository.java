@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class AircraftFileRepository implements IAircraftRepository {
     private static final String DATA_FILE = "src/data/aircrafts.txt";
@@ -56,6 +58,79 @@ public class AircraftFileRepository implements IAircraftRepository {
         } catch (IOException e) {
             System.out.println("Storage read error: " + e.getMessage());
             return new ArrayList<>();
+        }
+    }
+
+    @Override
+    public boolean deleteByTailNumber(String tailNumber) {
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(DATA_FILE));
+            List<String> updatedLines = new ArrayList<>();
+            boolean recordFound = false;
+
+            for (String line : lines) {
+                // Ensure we match the exact tail number by checking the appended comma
+                if (line.startsWith(tailNumber + ",")) {
+                    recordFound = true; // We found the target; do not add it to the updated list
+                } else {
+                    updatedLines.add(line);
+                }
+            }
+
+            if (recordFound) {
+                // Overwrite the existing file with the filtered list
+                Files.write(Paths.get(DATA_FILE), updatedLines);
+            }
+
+            return recordFound;
+
+        } catch (IOException e) {
+            System.out.println("Storage delete error: " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public Optional<Aircraft> findByTailNumber(String tailNumber) {
+        for (String line : getAllAircraftRecords()) {
+            if (line.startsWith(tailNumber + ",")) {
+                try {
+                    return Optional.of(Aircraft.fromFileRecord(line));
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Corrupt aircraft record skipped: " + e.getMessage());
+                    return Optional.empty();
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean updateAircraft(Aircraft updatedAircraft) {
+        try {
+            Path path = Paths.get(DATA_FILE);
+            List<String> lines = Files.readAllLines(path);
+            List<String> updatedLines = new ArrayList<>();
+            String prefix = updatedAircraft.getTailNumber() + ",";
+            boolean recordFound = false;
+
+            for (String line : lines) {
+                if (!recordFound && line.startsWith(prefix)) {
+                    updatedLines.add(updatedAircraft.toFileRecord());
+                    recordFound = true;
+                } else {
+                    updatedLines.add(line);
+                }
+            }
+
+            if (recordFound) {
+                Files.write(path, updatedLines);
+            }
+            return recordFound;
+
+        } catch (IOException e) {
+            System.out.println("Storage update error: " + e.getMessage());
+            return false;
         }
     }
 }

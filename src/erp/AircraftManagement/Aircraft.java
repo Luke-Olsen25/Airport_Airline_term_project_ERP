@@ -35,6 +35,21 @@ public class Aircraft {
         return seatingCapacity;
     }
 
+    public AircraftStatus getStatus() { return status;}
+
+    public void setStatus(AircraftStatus status) {this.status = status;}
+
+    public static Aircraft fromFileRecord(String line) {
+        String[] d = line.split(",", -1);
+        if (d.length != 7) {
+            throw new IllegalArgumentException("Malformed aircraft record: " + line);
+        }
+        Aircraft aircraft = new Aircraft(d[0], d[1], d[2], d[3],
+                Integer.parseInt(d[4].trim()), Integer.parseInt(d[5].trim()));
+        aircraft.setStatus(AircraftStatus.valueOf(d[6].trim()));
+        return aircraft;
+    }
+
     public String toFileRecord() {
         return String.join(",",
                 tailNumber,
