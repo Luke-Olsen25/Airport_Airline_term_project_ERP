@@ -41,6 +41,7 @@ public class terminal_ui {
             System.out.println("     7. View Current Employees");
             System.out.println("     8. Schedule Flight");
             System.out.println("     9. View Scheduled Flights");
+            System.out.println("    10. Cancel Booking");
             System.out.println("\n     90. Sign Off\n");
             System.out.print("Selection or command\n===> ");
 
@@ -73,6 +74,9 @@ public class terminal_ui {
                     break;
                 case "9":
                     flightService.showScheduledFlights();
+                    break;
+                case "10":
+                    ticketSalesTerminal.handleCancelBooking(scanner);
                     break;
                 case "90":
                     running = false;

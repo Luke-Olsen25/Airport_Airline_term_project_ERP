@@ -50,8 +50,18 @@ public class TicketSalesTerminal {
         while (open == null) {
             String number = ask(scanner, "Enter Flight number (blank to cancel)");
             if (number == null || number.isEmpty()) { cancel(); return; }
+            Flight chosen = null;
+            for (Flight f : found) {
+                if (f.getFlightNumber().equalsIgnoreCase(number) || f.getFlightId().equalsIgnoreCase(number)) {
+                    chosen = f;
+                }
+            }
+            if (chosen == null) {
+                System.out.println("  Flight " + number + " is not in the search results.");
+                continue;
+            }
             try {
-                open = service.startPurchase(number);
+                open = service.startPurchase(chosen.getFlightId());
             } catch (RuntimeException e) {
                 System.out.println("  " + e.getMessage());
             }
@@ -128,6 +138,54 @@ public class TicketSalesTerminal {
                 cancel();
                 return;
             }
+        }
+    }
+
+    /** Walks the ticket agent through the Cancel Booking main success scenario. */
+    public void handleCancelBooking(Scanner scanner) {
+        System.out.println("\n--- CANCEL BOOKING ---");
+        try {
+            cancelBooking(scanner);
+        } catch (RuntimeException e) {
+            service.abandonCancellation();
+            System.out.println("\n[ERROR] " + e.getMessage());
+        }
+        System.out.print("\nPress Enter to return to Main Menu...");
+        if (scanner.hasNextLine()) scanner.nextLine();
+    }
+
+    private void cancelBooking(Scanner scanner) {
+        // Steps 2-3: find the booking
+        Ticket ticket = null;
+        while (ticket == null) {
+            String number = ask(scanner, "Enter Ticket number (e.g., TK000001, blank to exit)");
+            if (number == null || number.isEmpty()) {
+                System.out.println("\n[ABORTED] No booking was cancelled.");
+                return;
+            }
+            try {
+                ticket = service.findBooking(number);
+            } catch (RuntimeException e) {
+                System.out.println("  " + e.getMessage());
+            }
+        }
+        System.out.println(ticket);
+
+        // Steps 4-5: confirm and cancel
+        String answer = ask(scanner, "Cancel this booking? (Y/N)");
+        if (answer == null || !answer.equalsIgnoreCase("Y")) {
+            service.abandonCancellation();
+            System.out.println("\n[ABORTED] The booking was not cancelled.");
+            return;
+        }
+        boolean seatReleased = service.confirmCancellation();
+        System.out.println("\n[SUCCESS] Ticket " + ticket.getTicketNumber() + " is cancelled.");
+        if (seatReleased) {
+            System.out.println("Seat " + ticket.getSeatNumber() + " on flight " + ticket.getFlightNumber()
+                    + " is open for sale again.");
+        } else {
+            System.out.println("Flight " + ticket.getFlightNumber()
+                    + " is no longer on the schedule, so no seat was released.");
         }
     }
 

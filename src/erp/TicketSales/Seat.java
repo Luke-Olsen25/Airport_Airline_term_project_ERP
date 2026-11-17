@@ -27,6 +27,14 @@ public class Seat {
         sold = true;
     }
 
+    /** Puts a sold seat back on sale (Cancel Booking). Fails if the seat was not sold. */
+    public void release() {
+        if (!sold) {
+            throw new IllegalStateException("Seat " + seatNumber + " is not sold.");
+        }
+        sold = false;
+    }
+
     @Override
     public String toString() {
         return String.format("%-4s %-8s $%8.2f", seatNumber, seatClass, price);

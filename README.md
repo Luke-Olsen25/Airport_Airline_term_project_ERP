@@ -52,7 +52,7 @@ Airport_Airline_term_project_ERP/
     │   │   ├── IEmployeeRepository.java
     │   │   ├── EmployeeFileRepository.java
     │   │   └── HumanResourcesService.java
-    │   └── TicketSales/                # Ticket Sales (Purchase Ticket)
+    │   └── TicketSales/                # Ticket Sales (Purchase Ticket, Cancel Booking)
     │       ├── Flight.java
     │       ├── FlightCatalog.java
     │       ├── Seat.java
@@ -61,6 +61,7 @@ Airport_Airline_term_project_ERP/
     │       ├── Payment.java
     │       ├── PaymentMethod.java
     │       ├── Ticket.java
+    │       ├── TicketStatus.java
     │       ├── TicketSale.java
     │       ├── IFlightRepository.java
     │       ├── ITicketRepository.java
@@ -68,12 +69,14 @@ Airport_Airline_term_project_ERP/
     │       ├── TicketFileRepository.java
     │       ├── TicketSalesService.java
     │       └── TicketSalesTerminal.java
+    ├── api/                            # Read-only APIs other departments use instead of reading data files
+    │   ├── HumanResources/             # IEmployeeLookup, EmployeeLookup
+    │   └── TicketSales/                # ITicketLookup, TicketLookup (tickets, passengers per flight, seats sold/left)
     └── data/                           # Flat-file storage (no DBMS)
         ├── aircrafts.txt               # Aircraft Management
         ├── employee.txt                # Human Resources
         ├── scheduled_flights.txt       # Flight Management
-        ├── flights.txt                 # Flights offered for sale (read by Ticket Sales)
-        ├── seats.txt                   # Ticket Sales
+        ├── seats.txt                   # Ticket Sales (seats per scheduled flight)
         ├── tickets.txt                 # Ticket Sales
         └── gates.txt                   # Airport Operations
 ```
@@ -96,8 +99,8 @@ Airport_Airline_term_project_ERP/
 Run from the repository root (data paths are relative to it):
 
 ```
-javac -d out src/erp/*.java src/erp/AircraftManagement/*.java src/erp/TicketSales/*.java
-java -cp out erp.terminal_ui
+javac -d out src/erp/*.java src/erp/AircraftManagement/*.java src/erp/FlightManagement/*.java src/erp/HumanResources/*.java src/erp/TicketSales/*.java src/api/HumanResources/*.java src/api/TicketSales/*.java
+java -cp out erp.main
 ```
 
 ## Conventions
