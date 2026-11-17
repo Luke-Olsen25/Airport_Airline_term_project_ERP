@@ -1,3 +1,2 @@
-fl001|aa101|american airlines|dsm|ord|2026-11-05T08:00|2026-11-05T09:30|ac001|a12|dsm|a|Scheduled
-fl004|aa104|american airlines|ord|dfw|2026-11-05T09:00|2026-11-05T11:00|ac002|a12|ord|a|Scheduled
-fl005|aa105|american airlines|dsm|ord|2026-11-05T09:30|2026-11-05T11:00|ac001|c12|dsm|a|Scheduled
+fl001|aa101|American Airlines|DSM|ORD|2026-11-10T08:00|2026-11-10T09:30|ac001|a12|dsm|a|Scheduled
+fl004|aa104|American Airlines|dsm|ord|2026-11-10T09:30|2026-11-10T11:00|ac001|a12|dsm|a|Scheduled
