@@ -11,6 +11,8 @@ import erp.TicketSales.FlightFileRepository;
 import erp.TicketSales.TicketFileRepository;
 import erp.TicketSales.TicketSalesService;
 import erp.TicketSales.TicketSalesTerminal;
+import erp.command.CommandInvoker;
+import erp.command.SignOffCommand;
 import java.util.Scanner;
 
 public class terminal_ui {
@@ -31,101 +33,46 @@ public class terminal_ui {
     private static TicketSalesTerminal ticketSalesTerminal = new TicketSalesTerminal(
             new TicketSalesService(new FlightFileRepository(), new TicketFileRepository()));
 
+    /**
+     * Client of the Command pattern. It builds the receivers (the department
+     * services above), registers one command per menu option with the invoker,
+     * and starts the invoker. Each registration binds a menu number to a
+     * method on a receiver, so adding a menu option means adding one line here.
+     */
     public static void run() {
         Scanner scanner = new Scanner(System.in);
-        boolean running = true;
+        CommandInvoker invoker = new CommandInvoker();
 
-        while (running) {
-            System.out.println("MAIN                   ERP Main Menu");
-            System.out.println("\nSelect one of the following:");
-            System.out.println("\n   === AIRCRAFT MANAGEMENT ===");
-            System.out.println("     1. Register New Aircraft");
-            System.out.println("     2. View Registered Aircrafts");
-            System.out.println("     3. Delete Registered Aircraft");
-            System.out.println("     4. Schedule Maintenance");
-            System.out.println("     5. Complete Maintenance");
-            System.out.println("\n   === FLIGHT MANAGEMENT ===");
-            System.out.println("     6. Schedule Flight");
-            System.out.println("     7. View Scheduled Flights");
-            System.out.println("     8. Update Flight");
-            System.out.println("\n   === TICKET SALES ===");
-            System.out.println("     9. Purchase Ticket");
-            System.out.println("     10. Cancel Booking");
-            System.out.println("\n   === AIRPORT OPERATIONS ===");
-            System.out.println("     11. Assign Gate");
-            System.out.println("     12. View Gate Assignments");
-            System.out.println("     13. Update Gate Assignment");
-            System.out.println("\n   === HUMAN RESOURCES ===");
-            System.out.println("     14. Hire New employee");
-            System.out.println("     15. View Current Employees");
-            System.out.println("     16. Assign Employee to Flight");
-            System.out.println("     17. Assign Employee to Gate");
-            System.out.println("\n     90. Sign Off\n");
-            System.out.print("Selection or command\n===> ");
+        invoker.startSection("AIRCRAFT MANAGEMENT");
+        invoker.register("1", "Register New Aircraft", aircraftService::handleRegistration);
+        invoker.register("2", "View Registered Aircrafts", aircraftService::handleViewAircrafts);
+        invoker.register("3", "Delete Registered Aircraft", aircraftService::handleDeleteAircraft);
+        invoker.register("4", "Schedule Maintenance", maintenanceService::handleScheduleMaintenance);
+        invoker.register("5", "Complete Maintenance", maintenanceService::handleCompleteMaintenance);
 
-            String choice = scanner.nextLine();
+        invoker.startSection("FLIGHT MANAGEMENT");
+        invoker.register("6", "Schedule Flight", flightService::handleScheduling);
+        invoker.register("7", "View Scheduled Flights", s -> flightService.showScheduledFlights());
+        invoker.register("8", "Update Flight", flightService::handleUpdate);
 
-            switch (choice) {
-                case "1":
-                    aircraftService.handleRegistration(scanner);
-                    break;
-                case "2":
-                    aircraftService.handleViewAircrafts(scanner);
-                    break;
-                case "3":
-                    aircraftService.handleDeleteAircraft(scanner);
-                    break;
-                case "4":
-                    maintenanceService.handleScheduleMaintenance(scanner);
-                    break;
-                case "5":
-                    maintenanceService.handleCompleteMaintenance(scanner);
-                    break;
-                case "6":
-                    flightService.handleScheduling(scanner);
-                    break;
-                case "7":
-                    flightService.showScheduledFlights();
-                    break;
-                case "8":
-                    flightService.handleUpdate(scanner);
-                    break;
-                case "9":
-                    ticketSalesTerminal.handlePurchaseTicket(scanner);
-                    break;
-                case "10":
-                    ticketSalesTerminal.handleCancelBooking(scanner);
-                    break;
-                case "11":
-                    airport_ops.assignGate(scanner);
-                    break;
-                case "12":
-                    airport_ops.showAssignments();
-                    break;
-                case "13":
-                    airport_ops.updateGate(scanner);
-                    break;
-                case "14":
-                    hrService.handleHiring(scanner);
-                    break;
-                case "15":
-                    hrService.handleViewEmployees(scanner);
-                    break;
-                case "16":
-                    hrService.handleAssignFlight(scanner);
-                    break;
-                case "17":
-                    hrService.handleAssignGate(scanner);
-                    break;
-                case "90":
-                    running = false;
-                    System.out.println("Signing off...");
-                    break;
-                default:
-                    System.out.println("\nInvalid selection. Press Enter to try again.");
-                    scanner.nextLine();
-            }
-        }
+        invoker.startSection("TICKET SALES");
+        invoker.register("9", "Purchase Ticket", ticketSalesTerminal::handlePurchaseTicket);
+        invoker.register("10", "Cancel Booking", ticketSalesTerminal::handleCancelBooking);
+
+        invoker.startSection("AIRPORT OPERATIONS");
+        invoker.register("11", "Assign Gate", airport_ops::assignGate);
+        invoker.register("12", "View Gate Assignments", s -> airport_ops.showAssignments());
+        invoker.register("13", "Update Gate Assignment", airport_ops::updateGate);
+
+        invoker.startSection("HUMAN RESOURCES");
+        invoker.register("14", "Hire New employee", hrService::handleHiring);
+        invoker.register("15", "View Current Employees", hrService::handleViewEmployees);
+        invoker.register("16", "Assign Employee to Flight", hrService::handleAssignFlight);
+        invoker.register("17", "Assign Employee to Gate", hrService::handleAssignGate);
+
+        invoker.register("90", "Sign Off", new SignOffCommand(invoker));
+
+        invoker.run(scanner, "90");
         scanner.close();
     }
 }
