@@ -2,6 +2,8 @@ package erp;
 
 import erp.AircraftManagement.AircraftFileRepository;
 import erp.AircraftManagement.AircraftManagementService;
+import erp.AircraftManagement.MaintenanceFileRepository;
+import erp.AircraftManagement.MaintenanceService;
 import erp.FlightManagement.FlightManagementService;
 import erp.HumanResources.EmployeeFileRepository;
 import erp.HumanResources.HumanResourcesService;
@@ -13,8 +15,13 @@ import java.util.Scanner;
 
 public class terminal_ui {
 
+    private static final AircraftFileRepository aircraftRepository = new AircraftFileRepository();
+
     private static AircraftManagementService aircraftService =
-            new AircraftManagementService(new AircraftFileRepository());
+            new AircraftManagementService(aircraftRepository);
+
+    private static MaintenanceService maintenanceService =
+            new MaintenanceService(new MaintenanceFileRepository(), aircraftRepository);
 
     private static HumanResourcesService hrService =
             new HumanResourcesService(new EmployeeFileRepository());
@@ -41,7 +48,11 @@ public class terminal_ui {
             System.out.println("     7. View Current Employees");
             System.out.println("     8. Schedule Flight");
             System.out.println("     9. View Scheduled Flights");
-            System.out.println("    10. Cancel Booking");
+            System.out.println("     10. Delete Registered Aircraft");
+            System.out.println("     11. Schedule Maintenance");
+            System.out.println("     12. Complete Maintenance");
+            System.out.println("     13. Update Gate Assignment");
+            System.out.println("     14. Cancel Booking");
             System.out.println("\n     90. Sign Off\n");
             System.out.print("Selection or command\n===> ");
 
@@ -76,6 +87,18 @@ public class terminal_ui {
                     flightService.showScheduledFlights();
                     break;
                 case "10":
+                    aircraftService.handleDeleteAircraft(scanner);
+                    break;
+                case "11":
+                    maintenanceService.handleScheduleMaintenance(scanner);
+                    break;
+                case "12":
+                    maintenanceService.handleCompleteMaintenance(scanner);
+                    break;
+                case "13":
+                    airport_ops.updateGate(scanner);
+                    break;
+                case "14":
                     ticketSalesTerminal.handleCancelBooking(scanner);
                     break;
                 case "90":
@@ -89,4 +112,4 @@ public class terminal_ui {
         }
         scanner.close();
     }
-}
+}

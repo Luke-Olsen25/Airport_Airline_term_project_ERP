@@ -12,7 +12,7 @@
 ## Main success scenario
 
 1. Passenger asks the Ticket Agent to cancel a booking.
-2. Ticket Agent selects Cancel Booking (menu option 10) and enters the ticket number.
+2. Ticket Agent selects Cancel Booking (menu option 14) and enters the ticket number.
 3. System finds the ticket, checks that it is still active and that its flight has not departed, and displays the ticket details.
 4. Ticket Agent confirms with the passenger and answers Y to cancel.
 5. System marks the ticket CANCELLED with the current time, puts the seat back on sale, saves both files, and reports that the ticket is cancelled and the seat is open for sale again.

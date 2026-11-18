@@ -40,7 +40,7 @@ Read-only, following the team's shared-API convention (same style as `api.HumanR
 
 ## Menu entry point
 
-`terminal_ui` option 10 calls `TicketSalesTerminal.handleCancelBooking(scanner : Scanner)`.
+`terminal_ui` option 14 calls `TicketSalesTerminal.handleCancelBooking(scanner : Scanner)`.
 
 ## Data files
 
