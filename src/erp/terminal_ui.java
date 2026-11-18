@@ -37,20 +37,29 @@ public class terminal_ui {
 
         while (running) {
             System.out.println("MAIN                   ERP Main Menu");
-            System.out.println("\nSelect one of the following:\n");
+            System.out.println("\nSelect one of the following:");
+            System.out.println("\n   === AIRCRAFT MANAGEMENT ===");
             System.out.println("     1. Register New Aircraft");
             System.out.println("     2. View Registered Aircrafts");
-            System.out.println("     3. Purchase Ticket");
-            System.out.println("     4. Assign Gate");
-            System.out.println("     5. View Gate Assignments");
-            System.out.println("     6. Hire New employee");
-            System.out.println("     7. View Current Employees");
-            System.out.println("     8. Schedule Flight");
-            System.out.println("     9. View Scheduled Flights");
-            System.out.println("     10. Delete Registered Aircraft");
-            System.out.println("     11. Schedule Maintenance");
-            System.out.println("     12. Complete Maintenance");
-            System.out.println("     13. Update Flight");
+            System.out.println("     3. Delete Registered Aircraft");
+            System.out.println("     4. Schedule Maintenance");
+            System.out.println("     5. Complete Maintenance");
+            System.out.println("\n   === FLIGHT MANAGEMENT ===");
+            System.out.println("     6. Schedule Flight");
+            System.out.println("     7. View Scheduled Flights");
+            System.out.println("     8. Update Flight");
+            System.out.println("\n   === TICKET SALES ===");
+            System.out.println("     9. Purchase Ticket");
+            System.out.println("     10. Cancel Booking");
+            System.out.println("\n   === AIRPORT OPERATIONS ===");
+            System.out.println("     11. Assign Gate");
+            System.out.println("     12. View Gate Assignments");
+            System.out.println("     13. Update Gate Assignment");
+            System.out.println("\n   === HUMAN RESOURCES ===");
+            System.out.println("     14. Hire New employee");
+            System.out.println("     15. View Current Employees");
+            System.out.println("     16. Assign Employee to Flight");
+            System.out.println("     17. Assign Employee to Gate");
             System.out.println("\n     90. Sign Off\n");
             System.out.print("Selection or command\n===> ");
 
@@ -64,37 +73,49 @@ public class terminal_ui {
                     aircraftService.handleViewAircrafts(scanner);
                     break;
                 case "3":
-                    ticketSalesTerminal.handlePurchaseTicket(scanner);
-                    break;
-                case "4":
-                    airport_ops.assignGate(scanner);
-                    break;
-                case "5":
-                    airport_ops.showAssignments();
-                    break;
-                case "6":
-                    hrService.handleHiring(scanner);
-                    break;
-                case "7":
-                    hrService.handleViewEmployees(scanner);
-                    break;
-                case "8":
-                    flightService.handleScheduling(scanner);
-                    break;
-                case "9":
-                    flightService.showScheduledFlights();
-                    break;
-                case "10":
                     aircraftService.handleDeleteAircraft(scanner);
                     break;
-                case "11":
+                case "4":
                     maintenanceService.handleScheduleMaintenance(scanner);
                     break;
-                case "12":
+                case "5":
                     maintenanceService.handleCompleteMaintenance(scanner);
                     break;
-                case "13":
+                case "6":
+                    flightService.handleScheduling(scanner);
+                    break;
+                case "7":
+                    flightService.showScheduledFlights();
+                    break;
+                case "8":
                     flightService.handleUpdate(scanner);
+                    break;
+                case "9":
+                    ticketSalesTerminal.handlePurchaseTicket(scanner);
+                    break;
+                case "10":
+                    ticketSalesTerminal.handleCancelBooking(scanner);
+                    break;
+                case "11":
+                    airport_ops.assignGate(scanner);
+                    break;
+                case "12":
+                    airport_ops.showAssignments();
+                    break;
+                case "13":
+                    airport_ops.updateGate(scanner);
+                    break;
+                case "14":
+                    hrService.handleHiring(scanner);
+                    break;
+                case "15":
+                    hrService.handleViewEmployees(scanner);
+                    break;
+                case "16":
+                    hrService.handleAssignFlight(scanner);
+                    break;
+                case "17":
+                    hrService.handleAssignGate(scanner);
                     break;
                 case "90":
                     running = false;
