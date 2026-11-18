@@ -12,72 +12,97 @@ A terminal-based Enterprise Resource Planning (ERP) system for a combined airpor
 | Aircraft Management | Register Aircraft    | Schedule Maintenance         | Record Maintenance         |
 | Airport Operations  | Assign Gate          | Update Gate Assignment         | Track Gate Availability         |
 
+## Features (Main Menu)
+
+The menu is grouped by department. Iteration 1 features are marked (I1) and Iteration 2 features are marked (I2).
+
+| # | Option | Department |
+|---|--------|------------|
+| 1 | Register New Aircraft (I1) | Aircraft Management |
+| 2 | View Registered Aircrafts (I1) | Aircraft Management |
+| 3 | Delete Registered Aircraft | Aircraft Management |
+| 4 | Schedule Maintenance (I2) | Aircraft Management |
+| 5 | Complete Maintenance (I2) | Aircraft Management |
+| 6 | Schedule Flight (I1) | Flight Management |
+| 7 | View Scheduled Flights (I1) | Flight Management |
+| 8 | Update Flight (I2) | Flight Management |
+| 9 | Purchase Ticket (I1) | Ticket Sales |
+| 10 | Cancel Booking (I2) | Ticket Sales |
+| 11 | Assign Gate (I1) | Airport Operations |
+| 12 | View Gate Assignments (I1) | Airport Operations |
+| 13 | Update Gate Assignment (I2) | Airport Operations |
+| 14 | Hire New Employee (I1) | Human Resources |
+| 15 | View Current Employees (I1) | Human Resources |
+| 16 | Assign Employee to Flight (I2) | Human Resources |
+| 17 | Assign Employee to Gate (I2) | Human Resources |
+| 90 | Sign Off | |
+
+## Command Pattern
+
+The menu uses the Command design pattern (package `erp.command`). Each menu option is a `Command`.
+`terminal_ui` registers a command for each option with the `CommandInvoker`, which prints the menu,
+reads the choice, and calls `execute()` on the matching command. The department classes (for example
+`AircraftManagementService` or `airport_ops`) are the receivers that do the real work. To add a
+menu option, register one more command in `terminal_ui.run()`.
+
 ## Project Layout
 
 ```
 Airport_Airline_term_project_ERP/
 ├── README.md
-├── Documents/
-│   ├── Iteration1/
-│   │   ├── inception_document/         # Inception write-ups per department
-│   │   ├── use_cases/                  # One use case per person
-│   │   ├── domain_model/               # Domain model diagrams
-│   │   ├── communication_diagrams/     # Communication diagrams per system operation
-│   │   ├── class_diagrams/             # Partial class diagrams
-│   │   └── interface_list/             # Interface lists per use case
-│   ├── Iteration2/                     # Empty for now; will mirror Iteration1, no inception document
-│   └── Iteration3/                     # Empty for now; will mirror Iteration1, no inception document
+├── Documents/                          # Diagrams, use cases, interface lists per iteration
 └── src/
     ├── erp/                            # Java source, one package per department
     │   ├── main.java                   # Entry point
-    │   ├── terminal_ui.java            # Main menu; routes selections to each department
-    │   ├── airport_ops.java            # Airport Operations (Assign Gate, View Gate Assignments)
+    │   ├── terminal_ui.java            # Creates the departments and registers the menu commands
+    │   ├── airport_ops.java            # Airport Operations menu handlers (assign, view, update gate)
     │   ├── flight_mngt.java            # Empty stub (Flight Management lives in FlightManagement/)
     │   ├── ticket_sales.java           # Empty stub (Ticket Sales lives in TicketSales/)
-    │   ├── AircraftManagement/         # Aircraft Management (Register Aircraft, View Registered Aircrafts)
-    │   │   ├── Aircraft.java
-    │   │   ├── AircraftStatus.java
-    │   │   ├── IAircraftRepository.java
-    │   │   ├── AircraftFileRepository.java
-    │   │   └── AircraftManagementService.java
-    │   ├── FlightManagement/           # Flight Management (Schedule Flight, View Scheduled Flights)
-    │   │   ├── Flight.java
-    │   │   ├── Gate.java
-    │   │   ├── FlightFileRepository.java
-    │   │   └──  FlightManagementService.java
-    │   ├── HumanResources/             # Human Resources (Hire Employee, View Current Employees)
-    │   │   ├── Employee.java
-    │   │   ├── EmployeeRole.java
-    │   │   ├── EmployeeStatus.java
-    │   │   ├── IEmployeeRepository.java
-    │   │   ├── EmployeeFileRepository.java
-    │   │   └── HumanResourcesService.java
-    │   └── TicketSales/                # Ticket Sales (Purchase Ticket, Cancel Booking)
-    │       ├── Flight.java
-    │       ├── FlightCatalog.java
-    │       ├── Seat.java
-    │       ├── SeatClass.java
-    │       ├── Passenger.java
-    │       ├── Payment.java
-    │       ├── PaymentMethod.java
-    │       ├── Ticket.java
-    │       ├── TicketStatus.java
-    │       ├── TicketSale.java
-    │       ├── IFlightRepository.java
-    │       ├── ITicketRepository.java
-    │       ├── FlightFileRepository.java
-    │       ├── TicketFileRepository.java
-    │       ├── TicketSalesService.java
-    │       └── TicketSalesTerminal.java
+    │   ├── command/                    # Command pattern
+    │   │   ├── Command.java            # Command interface
+    │   │   ├── CommandInvoker.java     # Invoker: menu, input, dispatch
+    │   │   └── SignOffCommand.java     # Concrete command for Sign Off
+    │   ├── AircraftManagement/         # Register, view, delete aircraft; schedule and complete maintenance
+    │   │   ├── Aircraft, AircraftStatus
+    │   │   ├── IAircraftRepository, AircraftFileRepository
+    │   │   ├── AircraftManagementService
+    │   │   ├── MaintenanceRecord, MaintenanceType, MaintenanceStatus
+    │   │   ├── IMaintenanceRepository, MaintenanceFileRepository
+    │   │   ├── MaintenanceService
+    │   │   └── IFlightScheduleReader, FlightScheduleFileReader
+    │   ├── AirportOperations/          # Assign gate, view gates, update gate assignment
+    │   │   ├── GateAssignment
+    │   │   ├── IGateAssignmentRepository, GateAssignmentFileRepository
+    │   │   ├── GateAssignmentService
+    │   │   └── GateOperationsTest      # Standalone test program (has its own main)
+    │   ├── FlightManagement/           # Schedule, view, update flights
+    │   │   ├── Flight, Gate
+    │   │   ├── FlightFileRepository
+    │   │   └── FlightManagementService
+    │   ├── HumanResources/             # Hire, view employees; assign employees to flights and gates
+    │   │   ├── Employee, EmployeeRole, EmployeeStatus
+    │   │   ├── IEmployeeRepository, EmployeeFileRepository
+    │   │   ├── HumanResourcesService
+    │   │   ├── IFlightScheduleLookup, FlightScheduleLookup
+    │   │   └── IGateLookup, GateLookup
+    │   └── TicketSales/                # Purchase ticket, cancel booking
+    │       ├── Flight, FlightCatalog, Seat, SeatClass
+    │       ├── Passenger, Payment, PaymentMethod
+    │       ├── Ticket, TicketSale, TicketStatus
+    │       ├── IFlightRepository, FlightFileRepository
+    │       ├── ITicketRepository, TicketFileRepository
+    │       └── TicketSalesService, TicketSalesTerminal
     └── data/                           # Flat-file storage (no DBMS)
         ├── aircrafts.txt               # Aircraft Management
-        ├── employee.txt                # Human Resources
+        ├── maintenance_logs.txt        # Aircraft Management (maintenance records)
         ├── scheduled_flights.txt       # Flight Management
-        ├── seats.txt                   # Ticket Sales (seats per scheduled flight)
+        ├── flights.txt                 # Ticket Sales (flights available to sell)
+        ├── seats.txt                   # Ticket Sales (seats per flight)
         ├── tickets.txt                 # Ticket Sales
-        └── gates.txt                   # Airport Operations
+        ├── gates.txt                   # Airport Operations (current assignments)
+        ├── gate_history.txt            # Airport Operations (log of gate changes)
+        └── employee.txt                # Human Resources
 ```
-
 
 ## Iteration 1 Deliverables
 
@@ -93,12 +118,23 @@ Airport_Airline_term_project_ERP/
 
 ## Build and Run
 
-Run from the repository root (data paths are relative to it):
+Run from the repository root (data paths are relative to it). Requires Java 8 or newer.
+
+Windows (PowerShell):
 
 ```
-javac -d out src/erp/*.java src/erp/AircraftManagement/*.java src/erp/FlightManagement/*.java src/erp/HumanResources/*.java src/erp/TicketSales/*.java
+javac -d out (Get-ChildItem src -Recurse -Filter *.java).FullName
 java -cp out erp.main
 ```
+
+Mac, Linux, or Git Bash:
+
+```
+javac -d out $(find src -name "*.java")
+java -cp out erp.main
+```
+
+If you pulled new code, delete the old `out` folder and compile again so the menu matches the source.
 
 ## Conventions
 
