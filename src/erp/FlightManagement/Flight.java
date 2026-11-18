@@ -13,7 +13,7 @@ public class Flight {
     private String destination;
     private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
-    private String aircraftId;
+    private String aircraftTailNumber;
     private Gate gate;
     private String status;
     
@@ -25,17 +25,17 @@ public class Flight {
         String destination,
         LocalDateTime departureTime,
         LocalDateTime arrivalTime,
-        String aircraftId,
+        String aircraftTailNumber,
         Gate gate
     ) {
          this(flightId, flightNumber, airline, origin, destination,
-            departureTime, arrivalTime, aircraftId, gate, "Scheduled");
+            departureTime, arrivalTime, aircraftTailNumber, gate, "Scheduled");
     }
     
     
     public Flight(String flightId, String flightNumber, String airline,
         String origin, String destination, LocalDateTime departureTime,
-        LocalDateTime arrivalTime, String aircraftId, Gate gate,
+        LocalDateTime arrivalTime, String aircraftTailNumber, Gate gate,
         String status) {
 
         this.flightId = flightId;
@@ -45,7 +45,7 @@ public class Flight {
         this.destination = destination;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
-        this.aircraftId = aircraftId;
+        this.aircraftTailNumber = aircraftTailNumber;
         this.gate = gate;
         this.status = status;
     }
@@ -78,8 +78,8 @@ public class Flight {
         return arrivalTime;
     }
     
-    public String getAircraftId() {
-        return aircraftId;
+    public String getAircraftTailNumber() {
+        return aircraftTailNumber;
     }
     
     public Gate getGate() {

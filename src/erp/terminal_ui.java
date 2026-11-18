@@ -17,20 +17,19 @@ public class terminal_ui {
 
     private static final AircraftFileRepository aircraftRepository = new AircraftFileRepository();
 
-    private static AircraftManagementService aircraftService =
-            new AircraftManagementService(aircraftRepository);
+    private static AircraftManagementService aircraftService = new AircraftManagementService(aircraftRepository);
 
-    private static MaintenanceService maintenanceService =
-            new MaintenanceService(new MaintenanceFileRepository(), aircraftRepository);
+    private static MaintenanceService maintenanceService = new MaintenanceService(new MaintenanceFileRepository(),
+            aircraftRepository);
 
-    private static HumanResourcesService hrService =
-            new HumanResourcesService(new EmployeeFileRepository());
+    private static HumanResourcesService hrService = new HumanResourcesService(new EmployeeFileRepository());
 
-    private static FlightManagementService flightService =
-            new FlightManagementService(new erp.FlightManagement.FlightFileRepository());
+    private static FlightManagementService flightService = new FlightManagementService(
+            new erp.FlightManagement.FlightFileRepository(),
+            aircraftRepository);
 
-    private static TicketSalesTerminal ticketSalesTerminal =
-            new TicketSalesTerminal(new TicketSalesService(new FlightFileRepository(), new TicketFileRepository()));
+    private static TicketSalesTerminal ticketSalesTerminal = new TicketSalesTerminal(
+            new TicketSalesService(new FlightFileRepository(), new TicketFileRepository()));
 
     public static void run() {
         Scanner scanner = new Scanner(System.in);
@@ -51,8 +50,7 @@ public class terminal_ui {
             System.out.println("     10. Delete Registered Aircraft");
             System.out.println("     11. Schedule Maintenance");
             System.out.println("     12. Complete Maintenance");
-            System.out.println("     13. Update Gate Assignment");
-            System.out.println("     14. Cancel Booking");
+            System.out.println("     13. Update Flight");
             System.out.println("\n     90. Sign Off\n");
             System.out.print("Selection or command\n===> ");
 
@@ -96,10 +94,7 @@ public class terminal_ui {
                     maintenanceService.handleCompleteMaintenance(scanner);
                     break;
                 case "13":
-                    airport_ops.updateGate(scanner);
-                    break;
-                case "14":
-                    ticketSalesTerminal.handleCancelBooking(scanner);
+                    flightService.handleUpdate(scanner);
                     break;
                 case "90":
                     running = false;
@@ -112,4 +107,4 @@ public class terminal_ui {
         }
         scanner.close();
     }
-}
+}
