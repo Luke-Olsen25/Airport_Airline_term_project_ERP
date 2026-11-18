@@ -89,4 +89,21 @@ public class AircraftManagementService {
         }
         return repository.save(aircraft);
     }
+
+    public void handleDeleteAircraft(Scanner scanner) {
+        System.out.println("\n--- DELETE REGISTERED AIRCRAFT ---");
+        System.out.print("Enter Tail Number to delete (e.g., N12345): ");
+        String tailNumber = scanner.nextLine();
+
+        boolean success = repository.deleteByTailNumber(tailNumber);
+
+        if (success) {
+            System.out.println("\n[SUCCESS] Aircraft " + tailNumber + " has been deleted from the system.");
+        } else {
+            System.out.println("\n[ERROR] Deletion failed. Tail number " + tailNumber + " was not found.");
+        }
+
+        System.out.print("\nPress Enter to return to Main Menu...");
+        scanner.nextLine();
+    }
 }
