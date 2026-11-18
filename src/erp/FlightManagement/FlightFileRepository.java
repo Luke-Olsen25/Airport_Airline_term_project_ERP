@@ -8,6 +8,7 @@ import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 public class FlightFileRepository {
     private final Path filePath = FileSystems.getDefault().getPath("data", "scheduled_flights.txt");
@@ -21,7 +22,7 @@ public class FlightFileRepository {
                 flight.getDestination(),
                 flight.getDepartureTime().toString(),
                 flight.getArrivalTime().toString(),
-                flight.getAircraftId(),
+                flight.getAircraftTailNumber(),
                 flight.getGate().getGateId(),
                 flight.getGate().getAirport(),
                 flight.getGate().getTerminal(),
@@ -75,5 +76,49 @@ public class FlightFileRepository {
         }
 
         return flights;
+    }
+    
+    public void update(Flight updatedFlight) throws IOException {
+        List<Flight> flights = findAll();
+        
+        boolean found = false;
+        
+        for (int i = 0; i < flights.size(); i++) {
+            if (flights.get(i).getFlightId()
+                    .equalsIgnoreCase(updatedFlight.getFlightId())) {
+                    
+                flights.set(i, updatedFlight);
+                found = true;
+                break;        
+            }
+        }
+        
+        if (!found) {
+            throw new IllegalArgumentException("Flight not found.");
+        }
+        
+        List<String> lines = new ArrayList<>();
+        
+        for (Flight flight: flights) {
+            Gate gate = flight.getGate();
+            
+            String line = String.join("|",
+                    flight.getFlightId(),
+                    flight.getFlightNumber(),
+                    flight.getAirline(),
+                    flight.getOrigin(),
+                    flight.getDestination(),
+                    flight.getDepartureTime().toString(),
+                    flight.getArrivalTime().toString(),
+                    flight.getAircraftTailNumber(),
+                    gate.getGateId(),
+                    gate.getAirport(),
+                    gate.getTerminal(),
+                    flight.getStatus()
+             );
+             
+             lines.add(line);
+        }
+        Files.write(filePath, lines, StandardCharsets.UTF_8);    
     }
 }
