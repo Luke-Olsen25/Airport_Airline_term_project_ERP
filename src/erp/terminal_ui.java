@@ -52,6 +52,7 @@ public class terminal_ui {
             System.out.println("     11. Schedule Maintenance");
             System.out.println("     12. Complete Maintenance");
             System.out.println("     13. Update Gate Assignment");
+            System.out.println("     14. Cancel Booking");
             System.out.println("\n     90. Sign Off\n");
             System.out.print("Selection or command\n===> ");
 
@@ -97,6 +98,9 @@ public class terminal_ui {
                 case "13":
                     airport_ops.updateGate(scanner);
                     break;
+                case "14":
+                    ticketSalesTerminal.handleCancelBooking(scanner);
+                    break;
                 case "90":
                     running = false;
                     System.out.println("Signing off...");
@@ -108,4 +112,4 @@ public class terminal_ui {
         }
         scanner.close();
     }
-}
+}

@@ -57,10 +57,10 @@ public class TicketSale {
         if (payment == null) throw new IllegalStateException("Payment has not been made.");
         seat.markSold();
         complete = true;
-        return new Ticket(ticketNumber, flight.getFlightNumber(), flight.getDate(),
+        return new Ticket(ticketNumber, flight.getFlightId(), flight.getFlightNumber(), flight.getDate(),
                 flight.getOrigin(), flight.getDestination(), seat.getSeatNumber(), seat.getSeatClass(),
                 passenger.getName(), passenger.getEmail(), passenger.getPhone(),
-                getTotal(), payment.getMethod(), LocalDateTime.now());
+                getTotal(), payment.getMethod(), LocalDateTime.now(), TicketStatus.ACTIVE, null);
     }
 
     public Flight getFlight() { return flight; }

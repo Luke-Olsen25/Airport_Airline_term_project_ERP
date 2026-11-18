@@ -7,5 +7,7 @@ public interface ITicketRepository {
     void initializeStorage();
     String nextTicketNumber();
     boolean save(Ticket ticket);
+    Ticket findByNumber(String ticketNumber);
+    boolean update(Ticket ticket);
     List<Ticket> loadAll();
 }
