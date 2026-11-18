@@ -11,7 +11,7 @@ import java.util.List;
 import java.nio.charset.StandardCharsets;
 
 public class FlightFileRepository {
-    private final Path filePath = FileSystems.getDefault().getPath("data", "scheduled_flights.txt");
+    private final Path filePath = FileSystems.getDefault().getPath("src", "data", "scheduled_flights.txt");
 
     public void save(Flight flight) throws IOException {
         String record = String.join("|",

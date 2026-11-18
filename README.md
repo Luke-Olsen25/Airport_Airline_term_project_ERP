@@ -4,11 +4,11 @@ A terminal-based Enterprise Resource Planning (ERP) system for a combined airpor
 
 ## Departments and Use Cases
 
-| Department          | Iteration 1 (CURRENT) | Iteration 2 (Subject to Change) | Iteration 3 (Subject to Change) |
+| Department          | Iteration 1 (COMPLETE) | Iteration 2 (CURRENT) | Iteration 3 (Subject to Change) |
 |---------------------|----------------------|-------------|-------------|
 | Flight Management   | Schedule Flight      | Update Flight         | Cancel Flight         |
 | Ticket Sales        | Purchase Ticket          | Cancel Booking         | Process Refund         |
-| Human Resources     | Hire Employee        | Assign Employee to Flight         | Process Payroll         |
+| Human Resources     | Hire Employee        | Assign Employee to Flight or Gate         | Process Payroll         |
 | Aircraft Management | Register Aircraft    | Schedule Maintenance         | Record Maintenance         |
 | Airport Operations  | Assign Gate          | Update Gate Assignment         | Track Gate Availability         |
 
@@ -69,9 +69,6 @@ Airport_Airline_term_project_ERP/
     │       ├── TicketFileRepository.java
     │       ├── TicketSalesService.java
     │       └── TicketSalesTerminal.java
-    ├── api/                            # Read-only APIs other departments use instead of reading data files
-    │   ├── HumanResources/             # IEmployeeLookup, EmployeeLookup
-    │   └── TicketSales/                # ITicketLookup, TicketLookup (tickets, passengers per flight, seats sold/left)
     └── data/                           # Flat-file storage (no DBMS)
         ├── aircrafts.txt               # Aircraft Management
         ├── employee.txt                # Human Resources
@@ -99,7 +96,7 @@ Airport_Airline_term_project_ERP/
 Run from the repository root (data paths are relative to it):
 
 ```
-javac -d out src/erp/*.java src/erp/AircraftManagement/*.java src/erp/FlightManagement/*.java src/erp/HumanResources/*.java src/erp/TicketSales/*.java src/api/HumanResources/*.java src/api/TicketSales/*.java
+javac -d out src/erp/*.java src/erp/AircraftManagement/*.java src/erp/FlightManagement/*.java src/erp/HumanResources/*.java src/erp/TicketSales/*.java
 java -cp out erp.main
 ```
 
